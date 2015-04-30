@@ -1,0 +1,90 @@
+# Command below tests a specific test method
+# RUBYLIB=test ruby test/users_test.rb --name test_post_users
+
+ENV['RACK_ENV'] = 'test'
+ENV['POSTGRES_URL'] = 'postgres://localhost/chats'
+
+require 'minitest/autorun'
+require 'rack/test'
+require_relative '../app/chats'
+
+class ChatsTest < MiniTest::Test
+  include Rack::Test::Methods
+
+  APP = Rack::Builder.parse_file('config.ru')[0]
+  def app
+    APP
+  end
+
+  def setup
+    # Create a user
+    @access_token = create_user('3525700299')
+  end
+
+  def teardown
+    Chats::POSTGRES.exec('BEGIN').clear
+    delete_from_query = 'SELECT \'DELETE FROM "\' || tablename || \'";\' FROM pg_tables WHERE schemaname = \'public\''
+    alter_sequence_query = 'SELECT \'ALTER SEQUENCE "\' || relname || \'" RESTART WITH 1;\' FROM pg_class WHERE relkind = \'S\''
+    Chats::POSTGRES.exec(delete_from_query + ' UNION ' + alter_sequence_query) do |result|
+      result.each_row { |t| Chats::POSTGRES.exec(t[0]).clear }
+    end
+    Chats::POSTGRES.exec('COMMIT').clear
+  end
+
+  def authorize_user(access_token)
+    header('Authorization', "Bearer #{access_token}")
+    yield
+    header 'Authorization', nil
+  end
+
+  def assert_return(return_value)
+    status, headers, body = parse_return(return_value)
+    assert_equal status, last_response.status
+    assert_equal headers, last_response.headers
+    if String === body
+      assert_equal body, last_response.body
+    else # Regexp
+      assert_match body, last_response.body
+    end
+  end
+
+  private
+
+  def parse_return(return_value)
+    status, headers, body = 200, {}, ''
+    case return_value
+    when Fixnum
+      status = return_value
+    when String, Regexp
+      body = return_value
+    else # Array
+      if return_value.count == 2
+        status, body = return_value
+      else
+        status, headers, body = return_value
+      end
+    end
+    [status, headers_base.merge(headers), body]
+  end
+
+  def headers_base
+    headers_base = {}
+    content_length = last_response.headers['Content-Length']
+    headers_base['Content-Length'] = content_length if content_length
+    if last_response.headers.include?('Content-Type')
+      headers_base['Content-Type'] = 'application/json'
+    end
+    headers_base
+  end
+
+  def create_user(phone)
+    Chats::POSTGRES.exec("INSERT INTO users (phone) VALUES ('#{phone}') RETURNING id") do |r|
+      user_id = r.getvalue(0, 0)
+      Chats::POSTGRES.exec("INSERT INTO sessions VALUES (#{user_id}) RETURNING id") do |r|
+        user_id+'|'+r.getvalue(0, 0)
+      end
+    end
+  end
+end
+
+require_relative 'text_belt_mock'
