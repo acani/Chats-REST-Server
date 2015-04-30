@@ -85,6 +85,12 @@ class ChatsTest < MiniTest::Test
       end
     end
   end
+
+  def get_code(type, phone)
+    Chats::POSTGRES.exec_params("SELECT code FROM #{type}_codes WHERE phone = '#{phone}'") do |r|
+      r.getvalue(0, 0)
+    end
+  end
 end
 
 require_relative 'text_belt_mock'

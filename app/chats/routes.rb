@@ -1,12 +1,30 @@
 class Chats
   def call(env)
     @env = env
-    # Eg: POST /sessions/1/1234 calls #sessions_post(1, 1234)
-    path_segments = env['PATH_INFO'][1..-1].split('/', 3)
-    method_name = "#{path_segments.shift}_#{env['REQUEST_METHOD'].downcase}".to_sym
-    if respond_to?(method_name) && method(method_name).arity == path_segments.count
-      path_segments.map! { |s| s.to_i }
-      return_value = send(method_name, *path_segments)
+    method = env['REQUEST_METHOD']
+
+    return_value = case env['PATH_INFO']
+    # when '/sessions'
+    #   case method
+    #   when 'POST' then sessions_post
+    #   when 'DELETE' then sessions_delete
+    #   end
+    when '/login_codes'
+      case method
+      when 'POST' then login_codes_post
+      end
+    when '/signup_codes'
+      case method
+      when 'POST' then signup_codes_post
+      end
+    when '/users'
+      case method
+      when 'GET' then users_get
+      when 'POST' then users_post
+      end
+    end
+
+    if return_value
       return_value[1] = [return_value[1]]
       return_value.insert(1, {'Content-Type' => 'application/json'})
     else

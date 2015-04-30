@@ -2,6 +2,13 @@ require 'test_helper'
 
 class UsersTest < ChatsTest
   def test_post_and_get_users
+    # Create signup code
+    phone = '2345678901'
+    Chats::TextBelt.mock({'success' => true}) do
+      post '/signup_codes', {phone: phone}
+    end
+    code = get_code('signup', phone)
+
     # Test no code
     post '/users'
     assert_return [400, '{"message":"Code is required."}']
@@ -26,12 +33,21 @@ class UsersTest < ChatsTest
     post '/users', {phone: '1234567890', code: '1234'}
     assert_return [400, '{"message":"Phone is invalid."}']
 
-    # # Test good phone
-    # post '/users', {phone: '2025550179'}
-    # assert_return [201, /\A\{"id":2,"access_token":"2\|[0-9a-f]{32}"\}\z/]
-    #
-    # # Confirm previous user creation
-    # get '/users'
-    # assert_return '[1,2]'
+    # Test incorrect code
+    incorrect_code = (code == '1234' ? '1235' : '1234')
+    post '/users', {phone: phone, code: incorrect_code}
+    assert_return [403, '{"message":"Code is incorrect or expired."}']
+
+    # Test incorrect phone
+    post '/users', {phone: '2345678902', code: code}
+    assert_return [403, '{"message":"Code is incorrect or expired."}']
+
+    # Test correct phone & code
+    post '/users', {phone: phone, code: code}
+    assert_return [201, /\A\{"id":2,"access_token":"2\|[0-9a-f]{32}"\}\z/]
+
+    # Confirm previous user creation
+    get '/users'
+    assert_return '[1,2]'
   end
 end
