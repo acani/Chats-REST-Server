@@ -11,7 +11,7 @@ class Chats
 
     POSTGRES.exec_params('SELECT * FROM signup_codes_post($1)', [phone]) do |r|
       if r.num_tuples == 0
-        [403, '{"message":"A Chats account with that phone number already exists."}']
+        [403, '{"message":"A Chats account already exists with that phone number."}']
       else
         result = TextBelt.send({
           to: phone,
@@ -20,7 +20,7 @@ class Chats
         if result['success']
           [200, '']
         else
-          [500, '{"message":'+result['message']+'}']
+          [500, '{"message":"'+result['message']+'"}']
         end
       end
     end

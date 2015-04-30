@@ -18,7 +18,8 @@ class ChatsTest < MiniTest::Test
 
   def setup
     # Create a user
-    @access_token = create_user('3525700299')
+    @phone = '3525700299'
+    @access_token = create_user(@phone)
   end
 
   def teardown
