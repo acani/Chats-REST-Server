@@ -14,8 +14,8 @@ class Chats
         [403, '{"message":"No Chats account exists with that phone number."}']
       else
         result = TextBelt.send({
-          to: phone,
-          body: "Your Chats code is #{r.getvalue(0, 0)}."
+          number: phone,
+          message: "Your Chats code is #{r.getvalue(0, 0)}."
         })
         if result['success']
           [200, '']
