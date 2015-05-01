@@ -54,5 +54,9 @@ class UsersTest < ChatsTest
     # Confirm previous user creation
     get '/users'
     assert_return '[1,2]'
+
+    # Test that code only works once
+    post '/users', {phone: @phone, code: code}
+    assert_return [403, '{"message":"Code is incorrect or expired."}']
   end
 end
