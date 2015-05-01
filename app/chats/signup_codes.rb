@@ -4,10 +4,8 @@ class Chats
   def signup_codes_post
     # Validate phone
     phone = Rack::Request.new(@env).POST['phone']
-    phone_invalid_message = phone_invalid_message(phone)
-    if phone_invalid_message
-      return [400, '{"message":"'+phone_invalid_message+'"}']
-    end
+    error = phone_invalid_response(phone)
+    return error if error
 
     POSTGRES.exec_params('SELECT * FROM signup_codes_post($1)', [phone]) do |r|
       if r.num_tuples == 0

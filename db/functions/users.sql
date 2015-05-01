@@ -31,9 +31,7 @@ $$
         RETURNING id
     )
     -- Create session
-    INSERT INTO sessions
-    SELECT id
-    FROM u
+    INSERT INTO sessions SELECT id FROM u
     RETURNING user_id, strip_hyphens(id);
 $$
 LANGUAGE SQL;

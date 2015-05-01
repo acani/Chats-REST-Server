@@ -81,7 +81,7 @@ class ChatsTest < MiniTest::Test
   def create_user(phone)
     Chats::POSTGRES.exec("INSERT INTO users (phone) VALUES ('#{phone}') RETURNING id") do |r|
       user_id = r.getvalue(0, 0)
-      Chats::POSTGRES.exec("INSERT INTO sessions VALUES (#{user_id}) RETURNING id") do |r|
+      Chats::POSTGRES.exec("INSERT INTO sessions VALUES (#{user_id}) RETURNING strip_hyphens(id)") do |r|
         user_id+'|'+r.getvalue(0, 0)
       end
     end

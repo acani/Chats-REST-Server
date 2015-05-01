@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class SignupCodesTest < ChatsTest
-  def test_signup_codes
+  def test_signup_codes_post
     # Test no phone
     post '/signup_codes'
     assert_return [400, '{"message":"Phone is required."}']

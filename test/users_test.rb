@@ -1,7 +1,12 @@
 require 'test_helper'
 
 class UsersTest < ChatsTest
-  def test_post_and_get_users
+  def test_users_get
+    get '/users'
+    assert_return '[1]'
+  end
+
+  def test_users_post
     # Create signup code
     phone = '2345678901'
     Chats::TextBelt.mock({'success' => true}) do
@@ -44,7 +49,7 @@ class UsersTest < ChatsTest
 
     # Test correct phone & code
     post '/users', {phone: phone, code: code}
-    assert_return [201, /\A\{"id":2,"access_token":"2\|[0-9a-f]{32}"\}\z/]
+    assert_return [201, /\A\{"access_token":"2\|[0-9a-f]{32}"\}\z/]
 
     # Confirm previous user creation
     get '/users'
