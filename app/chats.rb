@@ -3,7 +3,7 @@ require 'pg'
 require 'rack/protection'
 
 class Chats
-  uri = URI.parse(ENV['POSTGRES_URL'])
+  uri = URI.parse(ENV['DATABASE_URL'])
   POSTGRES = PG.connect(uri.host, uri.port, nil, nil, uri.path[1..-1], uri.user, uri.password)
 end
 

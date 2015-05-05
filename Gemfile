@@ -3,6 +3,7 @@ ruby '2.2.2'
 
 gem 'json'
 gem 'pg'
+gem 'puma'
 gem 'rack'
 gem 'rack-protection'
 

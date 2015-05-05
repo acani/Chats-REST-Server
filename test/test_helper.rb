@@ -2,7 +2,7 @@
 # RUBYLIB=test ruby test/users_test.rb --name test_post_users
 
 ENV['RACK_ENV'] = 'test'
-ENV['POSTGRES_URL'] = 'postgres://localhost/chats'
+ENV['DATABASE_URL'] = 'postgres://localhost/chats'
 
 require 'minitest/autorun'
 require 'rack/test'
