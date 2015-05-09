@@ -13,12 +13,13 @@ To install & test locally:
 3. All from the project's root directory:
     * `bundle install`
     * Start PostgreSQL
-    * In a new tab, run `rake psql`
+    * In a new tab: `rake psql`
     * Switch back to tab 1
     * Kill PostgreSQL
-    * Run `rerun foreman start`
+    * `echo DATABASE_URL=postgres://localhost/chats > .env`
+    * `rerun foreman start`
     * Switch back to tab 2
-    * Run `rake test`
+    * `rake test`
 
 
   [1]: https://github.com/acani/Chats

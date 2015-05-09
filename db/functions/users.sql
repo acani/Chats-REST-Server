@@ -1,11 +1,10 @@
 \c chats
 
--- List users.
-CREATE FUNCTION users_get() RETURNS TABLE(u bigint) AS
+-- Get all users
+CREATE FUNCTION users_get() RETURNS TABLE(u bigint, p char(32), f varchar(75), l varchar(75)) AS
 $$
-    SELECT id --, first_name, last_name
+    SELECT id, picture_id, first_name, last_name
     FROM users
-    ORDER BY id
     LIMIT 20;
 $$
 LANGUAGE SQL STABLE;
@@ -14,7 +13,7 @@ LANGUAGE SQL STABLE;
 -- Responses:
 --     Success: 1 row with user ID & session ID
 --     0 Rows:  Code may be incorrect or expired
-CREATE FUNCTION users_post(char(10), int) RETURNS TABLE(u bigint, s char(32)) AS
+CREATE FUNCTION users_post(varchar(15), int) RETURNS TABLE(u bigint, s char(32)) AS
 $$
     WITH d AS (
         -- Verify code and then delete

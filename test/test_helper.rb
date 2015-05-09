@@ -3,10 +3,13 @@
 
 ENV['RACK_ENV'] = 'test'
 ENV['DATABASE_URL'] = 'postgres://localhost/chats'
+ENV['AWS_REGION'] = 'region'
+ENV['AWS_ACCESS_KEY_ID'] = 'AWS_ACCESS_KEY_ID'
+ENV['AWS_SECRET_ACCESS_KEY'] = 'AWS_SECRET_ACCESS_KEY'
 
 require 'minitest/autorun'
 require 'rack/test'
-require_relative '../app/chats'
+require './config/application'
 
 class ChatsTest < MiniTest::Test
   include Rack::Test::Methods
@@ -19,7 +22,7 @@ class ChatsTest < MiniTest::Test
   def setup
     # Create a user
     @phone = '3525700299'
-    @access_token = create_user(@phone)
+    @access_token = create_user(SecureRandom.hex, 'Matt', 'Di Pasquale', @phone)
   end
 
   def teardown
@@ -78,10 +81,10 @@ class ChatsTest < MiniTest::Test
     headers_base
   end
 
-  def create_user(phone)
-    Chats::POSTGRES.exec("INSERT INTO users (phone) VALUES ('#{phone}') RETURNING id") do |r|
+  def create_user(picture_id, first_name, last_name, phone)
+    Chats::POSTGRES.exec('INSERT INTO users (picture_id, first_name, last_name, phone) VALUES ($1, $2, $3, $4) RETURNING id', [picture_id, first_name, last_name, phone]) do |r|
       user_id = r.getvalue(0, 0)
-      Chats::POSTGRES.exec("INSERT INTO sessions VALUES (#{user_id}) RETURNING strip_hyphens(id)") do |r|
+      Chats::POSTGRES.exec('INSERT INTO sessions VALUES ($1) RETURNING strip_hyphens(id)', [user_id]) do |r|
         user_id+'|'+r.getvalue(0, 0)
       end
     end
@@ -94,4 +97,4 @@ class ChatsTest < MiniTest::Test
   end
 end
 
-require_relative 'text_belt_mock'
+require './test/helpers/text_belt_mock'

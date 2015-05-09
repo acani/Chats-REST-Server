@@ -1,34 +1,13 @@
-# require 'test_helper'
-#
-# class MeTest < ChatsTest
-#   def test_get_me
-#     authorize_client do
-#       post '/users', {phone: 'user2@gmail.com'}
-#       post '/users', {phone: 'user3@gmail.com'}
-#     end
-#
-#     authorize_user(@access_token) do
-#        get '/me'
-#        assert_return [200, '{"id":1}']
-#
-#        message_create(from: 2, to: 1, body: '2 -> 1')
-#        2.times { message_create(from: 3, to: 1, body: '3 -> 1') }
-#        message_create(from: 2, to: 3, body: '2 -> 3')
-#        message_create(from: 3, to: 2, body: '3 -> 2')
-#
-#        get '/me'
-#        assert_return [200, '{"id":1,"chats":3}']
-#
-#        get '/messages/2'
-#        get '/me'
-#        assert_return [200, '{"id":1,"chats":2}']
-#
-#        get '/messages/3'
-#        get '/me'
-#        assert_return [200, '{"id":1}']
-#     end
-#   end
-#
+require 'test_helper'
+
+class MeTest < ChatsTest
+  def test_me_get
+    authorize_user(@access_token) do
+       get '/me'
+       assert_return [200, /\A{"id":1","picture_id":"[0-9a-f]{32}","name":{"first":"Matt","last":"Di Pasquale"}\z/]
+    end
+  end
+
 #   def test_put_me
 #     # Create another user
 #     authorize_client { post '/users', {phone: 'user2@gmail.com'} }
@@ -91,4 +70,4 @@
 #     authorize_client { get '/users' }
 #     assert_return [200, '[]']
 #   end
-# end
+end

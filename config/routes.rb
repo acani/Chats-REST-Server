@@ -14,6 +14,11 @@ class Chats
       case method
       when 'POST' then login_codes_post
       end
+    when '/me'
+      case method
+      when 'GET' then me_get
+      when 'PATCH' then me_patch
+      end
     when '/signup_codes'
       case method
       when 'POST' then signup_codes_post

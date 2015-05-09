@@ -1,7 +1,7 @@
 \c chats
 
 -- Enter phone. Create code.
-CREATE FUNCTION signup_codes_post(char(10)) RETURNS SETOF int AS
+CREATE FUNCTION signup_codes_post(varchar(15)) RETURNS SETOF int AS
 $$
     WITH p AS (
         -- Check if user with phone already exists

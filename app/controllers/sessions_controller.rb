@@ -14,7 +14,7 @@ class Chats
     error = phone_invalid_response(phone)
     return error if error
 
-    POSTGRES.exec_params("SELECT * FROM sessions_post($1, $2)", [phone, code]) do |r|
+    POSTGRES.exec_params('SELECT * FROM sessions_post($1, $2)', [phone, code]) do |r|
       if r.num_tuples == 0
         [403, '{"message":"Code is incorrect or expired."}']
       else
@@ -31,7 +31,7 @@ class Chats
     if !user_id
       [401, '']
     else
-      POSTGRES.exec_params("SELECT sessions_delete($1, $2)", [user_id, session_id]) do |r|
+      POSTGRES.exec_params('SELECT sessions_delete($1, $2)', [user_id, session_id]) do |r|
         if r.num_tuples == 0
           set_www_authenticate_header
           [401, '']

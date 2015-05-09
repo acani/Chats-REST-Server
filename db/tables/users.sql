@@ -3,8 +3,8 @@
 CREATE TABLE users (
     id bigserial PRIMARY KEY,
     created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    phone char(10) NOT NULL UNIQUE, -- U.S. only
-    first_name varchar(75),
-    last_name varchar(75)
+    picture_id char(32),
+    first_name varchar(75) NOT NULL CHECK (first_name <> ''),
+    last_name varchar(75) NOT NULL CHECK (last_name <> ''),
+    phone varchar(15) NOT NULL UNIQUE
 );
-CREATE UNIQUE INDEX on users (phone);

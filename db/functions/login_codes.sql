@@ -1,7 +1,7 @@
 \c chats
 
 -- Enter phone. Create code.
-CREATE FUNCTION login_codes_post(char(10)) RETURNS SETOF int AS
+CREATE FUNCTION login_codes_post(varchar(15)) RETURNS SETOF int AS
 $$
     WITH p AS (
         -- Confirm that user with phone exists

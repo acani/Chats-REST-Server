@@ -1,3 +1,3 @@
-require_relative 'app/chats'
+require './config/application'
 use Rack::Protection::PathTraversal
 run Chats.new

@@ -20,7 +20,7 @@ class Chats
     error = phone_invalid_response(phone)
     return error if error
 
-    POSTGRES.exec_params("SELECT * FROM users_post($1, $2)", [phone, code]) do |r|
+    POSTGRES.exec_params('SELECT * FROM users_post($1, $2)', [phone, code]) do |r|
       if r.num_tuples == 0
         [403, '{"message":"Code is incorrect or expired."}']
       else
