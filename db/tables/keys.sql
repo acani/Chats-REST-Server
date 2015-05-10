@@ -1,7 +1,7 @@
 \c chats
 
-CREATE TABLE signup_codes (
+CREATE TABLE keys (
     phone varchar(15) PRIMARY KEY,
-    code int NOT NULL DEFAULT trunc(random()*8999)+1000, -- 1000..9999
+    key uuid NOT NULL DEFAULT uuid_generate_v4(),
     created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

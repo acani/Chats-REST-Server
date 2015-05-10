@@ -7,7 +7,8 @@ class Chats
       POSTGRES.exec_params('SELECT * FROM me_get($1, $2)', [user_id, session_id]) do |r|
         if r.num_tuples == 1
           values = r.values[0]
-          return [200, '{"id":'+values[0]+'","picture_id":"'+values[1]+'","name":{"first":"'+values[2]+'","last":"'+values[3]+'"}']
+          picture_id = values[1] ? '","picture_id":"'+values[1] : ''
+          return [200, '{"id":"'+values[0]+picture_id+'","name":{"first":"'+values[2]+'","last":"'+values[3]+'"}']
         end
       end
     end

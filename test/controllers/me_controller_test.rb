@@ -4,7 +4,7 @@ class MeTest < ChatsTest
   def test_me_get
     authorize_user(@access_token) do
        get '/me'
-       assert_return [200, /\A{"id":1","picture_id":"[0-9a-f]{32}","name":{"first":"Matt","last":"Di Pasquale"}\z/]
+       assert_return [200, /\A{"id":"1","picture_id":"[0-9a-f]{32}","name":{"first":"Matt","last":"Di Pasquale"}\z/]
     end
   end
 
@@ -47,7 +47,7 @@ class MeTest < ChatsTest
 #     end
 #
 #     # Confirm phone-change
-#     authorize_client { Chats::TextBelt.mock { post '/signup_codes', {phone: 'user3@gmail.com'} } }
+#     authorize_client { Chats::TextBelt.mock { post '/codes', {phone: 'user3@gmail.com'} } }
 #     assert_return [200, '{"id":1}']
 #   end
 #

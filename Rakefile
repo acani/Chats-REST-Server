@@ -10,9 +10,9 @@ task :psql do
   run_psql('functions', 'helpers')
   ['tables', 'functions'].each do |d|
     run_psql_each(d, [
+      'codes',
+      'keys',
       'users',
-      'signup_codes',
-      'login_codes',
       'sessions'
     ])
   end

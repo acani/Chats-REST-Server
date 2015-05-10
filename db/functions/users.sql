@@ -3,7 +3,7 @@
 -- Get all users
 CREATE FUNCTION users_get() RETURNS TABLE(u bigint, p char(32), f varchar(75), l varchar(75)) AS
 $$
-    SELECT id, picture_id, first_name, last_name
+    SELECT id, strip_hyphens(picture_id), first_name, last_name
     FROM users
     LIMIT 20;
 $$
@@ -17,7 +17,7 @@ CREATE FUNCTION users_post(varchar(15), int) RETURNS TABLE(u bigint, s char(32))
 $$
     WITH d AS (
         -- Verify code and then delete
-        DELETE FROM signup_codes
+        DELETE FROM codes
         WHERE phone = $1
         AND code = $2
         RETURNING created_at

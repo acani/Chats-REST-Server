@@ -4,9 +4,9 @@ class SessionsTest < ChatsTest
   def test_sessions_post
     # Create login code
     Chats::TextBelt.mock({'success' => true}) do
-      post '/login_codes', {phone: @phone}
+      post '/codes', {phone: @phone}
     end
-    code = get_code('login', @phone)
+    code = get_code(@phone)
 
     # Test no code
     post '/sessions'

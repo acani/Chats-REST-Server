@@ -90,8 +90,8 @@ class ChatsTest < MiniTest::Test
     end
   end
 
-  def get_code(type, phone)
-    Chats::POSTGRES.exec_params("SELECT code FROM #{type}_codes WHERE phone = '#{phone}'") do |r|
+  def get_code(phone)
+    Chats::POSTGRES.exec_params('SELECT code FROM codes WHERE phone = $1', [phone]) do |r|
       r.getvalue(0, 0)
     end
   end

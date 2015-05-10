@@ -5,23 +5,23 @@ class Chats
     method = env['REQUEST_METHOD']
 
     return_value = case env['PATH_INFO']
-    when '/sessions'
+    when '/codes'
       case method
-      when 'POST' then sessions_post
-      when 'DELETE' then sessions_delete
+      when 'POST' then codes_post
       end
-    when '/login_codes'
+    when '/keys'
       case method
-      when 'POST' then login_codes_post
+      when 'POST' then keys_post
       end
     when '/me'
       case method
       when 'GET' then me_get
       when 'PATCH' then me_patch
       end
-    when '/signup_codes'
+    when '/sessions'
       case method
-      when 'POST' then signup_codes_post
+      when 'POST' then sessions_post
+      when 'DELETE' then sessions_delete
       end
     when '/users'
       case method

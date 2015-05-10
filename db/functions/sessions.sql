@@ -9,7 +9,7 @@ CREATE FUNCTION sessions_post(varchar(15), int) RETURNS TABLE(u bigint, s char(3
 $$
     WITH d AS (
         -- Verify code and then delete
-        DELETE FROM login_codes
+        DELETE FROM codes
         WHERE phone = $1
         AND code = $2
         RETURNING created_at
