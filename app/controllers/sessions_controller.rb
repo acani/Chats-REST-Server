@@ -1,5 +1,5 @@
 class Chats
-  # Log in: Verify phone; create/get session
+  # Log in: Verify phone; get/create session
   # curl -i -d phone=3525700299 -d code=1234 http://localhost:5100/sessions
   def sessions_post
     params = Rack::Request.new(@env).POST
@@ -18,7 +18,8 @@ class Chats
       if r.num_tuples == 0
         [403, '{"message":"Code is incorrect or expired."}']
       else
-        access_token = build_access_token(r.getvalue(0, 0), r.getvalue(0, 1))
+        values = r.values[0]
+        access_token = build_access_token(values[0], values[1])
         [201, '{"access_token":"'+access_token+'"}']
       end
     end

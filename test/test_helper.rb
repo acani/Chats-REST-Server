@@ -95,6 +95,18 @@ class ChatsTest < MiniTest::Test
       r.getvalue(0, 0)
     end
   end
+
+  def get_and_assert_code(phone)
+    code = Integer(get_code(phone))
+    assert code.between?(1000, 9999)
+    code
+  end
+
+  def get_key(phone)
+    Chats::POSTGRES.exec_params('SELECT strip_hyphens(key) FROM keys WHERE phone = $1', [phone]) do |r|
+      r.getvalue(0, 0)
+    end
+  end
 end
 
 require './test/helpers/text_belt_mock'

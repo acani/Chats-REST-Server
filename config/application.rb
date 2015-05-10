@@ -13,6 +13,7 @@ end
 require './config/routes'
 
 require './app/controllers/codes_controller'
+require './app/controllers/keys_controller'
 require './app/controllers/me_controller'
 require './app/controllers/sessions_controller'
 require './app/controllers/users_controller'

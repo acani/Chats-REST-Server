@@ -6,5 +6,5 @@ CREATE TABLE users (
     picture_id uuid,
     first_name varchar(75) NOT NULL CHECK (first_name <> ''),
     last_name varchar(75) NOT NULL CHECK (last_name <> ''),
-    phone varchar(15) NOT NULL UNIQUE
+    phone char(10) NOT NULL UNIQUE
 );

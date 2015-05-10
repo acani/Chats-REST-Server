@@ -1,11 +1,11 @@
 \c chats
 
--- Log in: Get or create session ID with `phone` & `code`
+-- Log in: Get/create session ID with `phone` & `code`
 -- Reuse one session per user across multiple devices.
 -- Responses:
 --     Success: 1 row with uuid
 --     0 Rows:  Incorrect or Expired Code
-CREATE FUNCTION sessions_post(varchar(15), int) RETURNS TABLE(u bigint, s char(32)) AS
+CREATE FUNCTION sessions_post(char(10), int) RETURNS TABLE(u bigint, s char(32)) AS
 $$
     WITH d AS (
         -- Verify code and then delete

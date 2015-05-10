@@ -8,7 +8,7 @@ class Chats
     return error if error
 
     POSTGRES.exec_params('SELECT * FROM codes_post($1)', [phone]) do |r|
-      values = r.values
+      values = r.values[0]
       result = TextBelt.send({
         number: phone,
         message: "Your Chats code is #{values[1]}"

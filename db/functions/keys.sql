@@ -1,7 +1,7 @@
 \c chats
 
--- Create key with phone & code
-CREATE FUNCTION keys_post(varchar(15), int) RETURNS SETOF char(32) AS
+-- Update/create key with phone & code
+CREATE FUNCTION keys_post(char(10), int) RETURNS SETOF char(32) AS
 $$
     WITH d AS (
         -- Delete matching phone & code
@@ -15,7 +15,7 @@ $$
         FROM d
         WHERE age(now(), d.created_at) < '3 minutes'
     ), u AS (
-        -- If key exists, update it
+        -- If phone exists, update its key
         UPDATE keys
         SET key = DEFAULT, created_at = DEFAULT
         WHERE EXISTS (SELECT 1 FROM t)
