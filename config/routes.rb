@@ -1,7 +1,7 @@
 class Chats
   def call(env)
     @env = env
-    @response_headers = {'Content-Type' => 'application/json'}
+    @response_headers = {}
     method = env['REQUEST_METHOD']
 
     return_value = case env['PATH_INFO']
@@ -31,7 +31,11 @@ class Chats
     end
 
     if return_value
-      return_value[1] = [return_value[1]]
+      body = return_value[1]
+      return_value[1] = [body]
+      unless body.empty?
+        @response_headers['Content-Type'] = 'application/json'
+      end
       return_value.insert(1, @response_headers)
     else
       [404, {}, []]

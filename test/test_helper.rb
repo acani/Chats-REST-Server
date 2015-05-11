@@ -75,7 +75,9 @@ class ChatsTest < MiniTest::Test
     headers_base = {}
     content_length = last_response.headers['Content-Length']
     headers_base['Content-Length'] = content_length if content_length
-    headers_base['Content-Type'] = 'application/json'
+    unless last_response.body.empty?
+      headers_base['Content-Type'] = 'application/json'
+    end
     headers_base
   end
 
