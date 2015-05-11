@@ -12,7 +12,7 @@ class CodesTest < ChatsTest
 
     # Test invalid phone
     post '/codes', {phone: '1234567890'}
-    assert_return [400, '{"message":"Phone is invalid."}']
+    assert_return [400, '{"message":"Phone is invalid. It must be 10 digits."}']
 
     # Test unregistered phone
     unregistered_phone = '2345678901'

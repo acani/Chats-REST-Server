@@ -2,7 +2,7 @@ require 'test_helper'
 
 class SessionsTest < ChatsTest
   def test_sessions_post
-    # Create login code
+    # Create code
     Chats::TextBelt.mock({'success' => true}) do
       post '/codes', {phone: @phone}
     end
@@ -18,7 +18,7 @@ class SessionsTest < ChatsTest
 
     # Test invalid code
     post '/sessions', {code: '123456'}
-    assert_return [400, '{"message":"Code is invalid."}']
+    assert_return [400, '{"message":"Code is invalid. It must be 4 digits."}']
 
     # Test no phone
     post '/sessions', {code: '1234'}
@@ -30,7 +30,7 @@ class SessionsTest < ChatsTest
 
     # Test invalid phone
     post '/sessions', {phone: '1234567890', code: '1234'}
-    assert_return [400, '{"message":"Phone is invalid."}']
+    assert_return [400, '{"message":"Phone is invalid. It must be 10 digits."}']
 
     # Test incorrect code
     incorrect_code = (code == '1234' ? '1235' : '1234')
@@ -38,7 +38,7 @@ class SessionsTest < ChatsTest
     assert_return [403, '{"message":"Code is incorrect or expired."}']
 
     # Test incorrect phone
-    post '/sessions', {phone: '2345678902', code: code}
+    post '/sessions', {phone: '2102390603', code: code}
     assert_return [403, '{"message":"Code is incorrect or expired."}']
 
     # Test correct phone & code

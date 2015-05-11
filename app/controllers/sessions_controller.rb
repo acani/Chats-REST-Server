@@ -1,5 +1,5 @@
 class Chats
-  # Log in: Verify phone; get/create session
+  # Log in: Verify phone & code; get/create session
   # curl -i -d phone=2102390602 -d code=1234 http://localhost:5100/sessions
   def sessions_post
     params = Rack::Request.new(@env).POST

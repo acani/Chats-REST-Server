@@ -2,9 +2,6 @@
 
 -- Log in: Get/create session ID with `phone` & `code`
 -- Reuse one session per user across multiple devices.
--- Responses:
---     Success: 1 row with uuid
---     0 Rows:  Incorrect or Expired Code
 CREATE FUNCTION sessions_post(char(10), int) RETURNS TABLE(u bigint, s char(32)) AS
 $$
     WITH d AS (
@@ -14,19 +11,19 @@ $$
         AND code = $2
         RETURNING created_at
     ), p AS (
-        -- Get user ID from phone
+        -- Get user_id with phone
         SELECT id
         FROM users, d
         WHERE EXISTS (SELECT 1 FROM d)
         AND age(now(), d.created_at) < '3 minutes'
         AND phone = $1
     ), g AS (
-        -- Get session ID
+        -- Get session_id with user_id
         SELECT user_id, strip_hyphens(s.id) as r
         FROM sessions s, p
         WHERE s.user_id = p.id
     ), i AS (
-        -- Create session ID if one doesn't exist
+        -- Create session_id if not exists
         INSERT INTO sessions
         SELECT id
         FROM p

@@ -19,7 +19,7 @@ class KeysTest < ChatsTest
 
     # Test invalid code
     post '/keys', {code: '123456'}
-    assert_return [400, '{"message":"Code is invalid."}']
+    assert_return [400, '{"message":"Code is invalid. It must be 4 digits."}']
 
     # Test no phone
     post '/keys', {code: '1234'}
@@ -31,7 +31,7 @@ class KeysTest < ChatsTest
 
     # Test invalid phone
     post '/keys', {phone: '1234567890', code: '1234'}
-    assert_return [400, '{"message":"Phone is invalid."}']
+    assert_return [400, '{"message":"Phone is invalid. It must be 10 digits."}']
 
     # Test incorrect code
     incorrect_code = (code == '1234' ? '1235' : '1234')

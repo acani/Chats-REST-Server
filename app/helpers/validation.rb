@@ -10,7 +10,7 @@ class Chats
     if string_strip_blank?(phone)
       'Phone is required.'
     elsif phone !~ /\A[2-9]\d\d[2-9]\d{6}\z/
-      'Phone is invalid.'
+      'Phone is invalid. It must be 10 digits.'
     end
   end
 
@@ -25,7 +25,7 @@ class Chats
     if string_strip_blank?(code)
       'Code is required.'
     elsif code !~ /\A[1-9]\d{3}\z/
-      'Code is invalid.'
+      'Code is invalid. It must be 4 digits.'
     end
   end
 
