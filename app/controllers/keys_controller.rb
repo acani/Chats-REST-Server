@@ -1,6 +1,6 @@
 class Chats
   # Verify phone; create/update key
-  # curl -i -d phone=3525700299 -d code=1234 http://localhost:5100/keys
+  # curl -i -d phone=2102390602 -d code=1234 http://localhost:5100/keys
   def keys_post
     params = Rack::Request.new(@env).POST
 

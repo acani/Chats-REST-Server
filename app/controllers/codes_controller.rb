@@ -1,6 +1,6 @@
 class Chats
   # Create or update code with phone
-  # curl -i -d phone=3525700299 http://localhost:5100/codes
+  # curl -i -d phone=2102390602 http://localhost:5100/codes
   def codes_post
     # Validate phone
     phone = Rack::Request.new(@env).POST['phone']

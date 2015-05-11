@@ -8,8 +8,6 @@ class Chats
     if parts && parts.size > 0 && parts[0].casecmp('Bearer') == 0 && access_token = parts[1]
       result = access_token.split('|')
       result if result.size == 2
-    else
-      set_www_authenticate_header
     end
   end
 

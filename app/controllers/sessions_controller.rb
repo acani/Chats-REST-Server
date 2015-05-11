@@ -1,6 +1,6 @@
 class Chats
   # Log in: Verify phone; get/create session
-  # curl -i -d phone=3525700299 -d code=1234 http://localhost:5100/sessions
+  # curl -i -d phone=2102390602 -d code=1234 http://localhost:5100/sessions
   def sessions_post
     params = Rack::Request.new(@env).POST
 
@@ -29,17 +29,14 @@ class Chats
   # curl -i -X DELETE -H 'Authorization: Bearer 1|12345678901234567890123456789012' http://localhost:5100/sessions
   def sessions_delete
     user_id, session_id = parse_authorization_header
-    if !user_id
-      [401, '']
-    else
+    if user_id
       POSTGRES.exec_params('SELECT sessions_delete($1, $2)', [user_id, session_id]) do |r|
-        if r.num_tuples == 0
-          set_www_authenticate_header
-          [401, '']
-        else
-          [200, '']
+        if r.num_tuples == 1
+          return [200, '']
         end
       end
     end
+    set_www_authenticate_header
+    [401, '']
   end
 end

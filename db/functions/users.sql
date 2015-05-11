@@ -9,28 +9,25 @@ $$
 $$
 LANGUAGE SQL STABLE;
 
--- Sign up: Create user & session ID with `phone` & `code`
--- Responses:
---     Success: 1 row with user ID & session ID
---     0 Rows:  Code may be incorrect or expired
-CREATE FUNCTION users_post(char(10), int) RETURNS TABLE(u bigint, s char(32)) AS
+-- Sign up: Create user & session with `phone`, `key`, `first_name`, and `last_name`
+CREATE FUNCTION users_post(char(10), uuid, varchar(75), varchar(75)) RETURNS SETOF bigint AS
 $$
     WITH d AS (
-        -- Verify code and then delete
-        DELETE FROM codes
+        -- Delete matching phone & key
+        DELETE FROM keys
         WHERE phone = $1
-        AND code = $2
-        RETURNING created_at
+        AND key = $2
+        RETURNING key
     ), u AS (
-        -- Create user with phone
-        INSERT INTO users (phone)
-        SELECT $1
+        -- Create user with phone, first_name, and last_name
+        INSERT INTO users (phone, first_name, last_name)
+        SELECT $1, $3, $4
         FROM d
-        WHERE age(now(), d.created_at) < '3 minutes'
         RETURNING id
     )
-    -- Create session
-    INSERT INTO sessions SELECT id FROM u
-    RETURNING user_id, strip_hyphens(id);
+    -- Create session with user_id & id
+    INSERT INTO sessions
+    SELECT id, key FROM u, d
+    RETURNING user_id;
 $$
 LANGUAGE SQL;

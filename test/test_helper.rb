@@ -21,7 +21,7 @@ class ChatsTest < MiniTest::Test
 
   def setup
     # Create a user
-    @phone = '3525700299'
+    @phone = '2102390602'
     @access_token = create_user(SecureRandom.hex, 'Matt', 'Di Pasquale', @phone)
   end
 
@@ -75,9 +75,7 @@ class ChatsTest < MiniTest::Test
     headers_base = {}
     content_length = last_response.headers['Content-Length']
     headers_base['Content-Length'] = content_length if content_length
-    if last_response.headers.include?('Content-Type')
-      headers_base['Content-Type'] = 'application/json'
-    end
+    headers_base['Content-Type'] = 'application/json'
     headers_base
   end
 

@@ -4,10 +4,10 @@ class Chats
   module TextBelt
     # Send SMS with TextBelt
     # TextBelt.send({
-    #   number: '3525700299',
+    #   number: '2102390602',
     #   message: 'Hello, World!'
     # })
-    # curl -i -d number=3525700299 -d message='Hello, World!' http://textbelt.com/text
+    # curl -i -d number=2102390602 -d message='Hello, World!' http://textbelt.com/text
     def self.send(params)
       uri = URI('http://textbelt.com/text')
       response = Net::HTTP.post_form(uri, params)

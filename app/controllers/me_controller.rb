@@ -19,7 +19,7 @@ class Chats
   # Update me: `first_name`, `last_name`, `pciture_url`
   # curl -i -X PATCH -H 'Authorization: Bearer 1|12345678901234567890123456789012' http://localhost:5100/me
   def me_patch
-    user_id, session_id = parse_access_token
+    user_id, session_id = parse_authorization_header
     if user_id
       params = Rack::Request.new(@env).POST
       picture_id = params['picture_id']
@@ -39,7 +39,7 @@ class Chats
   # https://devcenter.heroku.com/articles/direct-to-s3-image-uploads-in-rails#pre-signed-post
   # curl -i -X POST -H 'Authorization: Bearer 1|12345678901234567890123456789012' http://localhost:5100/presigned_posts
   def presigned_posts_post
-    user_id, session_id = parse_access_token
+    user_id, session_id = parse_authorization_header
     if user_id
       post = AWS_S3_BUCKET.presigned_post({
         key: "/users/#{SecureRandom.hex}/${filename}",
