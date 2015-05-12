@@ -49,4 +49,26 @@ class SessionsTest < ChatsTest
     post '/sessions', {phone: @phone, code: code}
     assert_return [403, '{"message":"Code is incorrect or expired."}']
   end
+
+  def test_sessions_delete
+    # Test invalid access_token
+    authorize_user('invalid-access_token') do
+      delete '/sessions'
+      assert_return [401, {'WWW-Authenticate' => 'Basic realm="Chats"'}, '']
+    end
+
+    # Test incorrect access_token
+    authorize_user('9|12345678901234567890123456789012') do
+      delete '/sessions'
+      assert_return [401, {'WWW-Authenticate' => 'Basic realm="Chats"'}, '']
+    end
+
+    # Test correct access_token
+    authorize_user(@access_token) do
+      delete '/sessions'
+      assert_return 200
+      get '/me'
+      assert_return [401, {'WWW-Authenticate' => 'Basic realm="Chats"'}, '']
+    end
+  end
 end

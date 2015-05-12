@@ -29,7 +29,21 @@ class Chats
     end
   end
 
+  def string_strip_empty?(string)
+    if string
+      string.strip!
+      string.empty?
+    else
+      false
+    end
+  end
+
   def string_strip_blank?(string)
-    !string || string.strip! && false || string.empty?
+    if string
+      string.strip!
+      string.empty?
+    else
+      true
+    end
   end
 end
