@@ -66,7 +66,6 @@ class Chats
   #   [401, '']
   # end
 
-
   # # Delete my account
   # # curl -i -X DELETE -H 'Authorization: Bearer 1|12345678901234567890123456789012' http://localhost:5100/me
   # def me_delete
