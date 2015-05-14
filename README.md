@@ -12,7 +12,7 @@ To install & test locally:
 2. `brew install postgresql`
 3. `brew install ruby`
 4. `gem install foreman`
-3. All from the project's `server` directory:
+3. All from the project's `Server` directory:
     * `bundle install`
     * Start PostgreSQL: `postgres -D /usr/local/var/postgres`
     * In a new tab: `rake psql`
