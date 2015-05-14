@@ -23,6 +23,9 @@ To install & test locally:
     * Switch back to tab 2
     * `rake test`
 
+This project is released under the [Unlicense][3].
+
 
   [1]: https://github.com/acani/Chats
   [2]: https://github.com/acani/Chats-Server-REST/raw/master/Documentation/SignupLoginFlow/SignupLoginFlow.jpg
+  [3]: http://unlicense.org
