@@ -16,10 +16,9 @@ class Chats
 
     POSTGRES.exec_params('SELECT * FROM keys_post($1, $2)', [phone, code]) do |r|
       if r.num_tuples == 0
-        [403, '{"message":"Code is incorrect or expired."}']
+        [403, '{"title":"Validation Error","message":"Code is incorrect or expired."}']
       else
-        access_token = build_access_token(phone, r.getvalue(0, 0))
-        [201, '{"access_token":"'+access_token+'"}']
+        [201, '{"key":"'+r.getvalue(0, 0)+'"}']
       end
     end
   end

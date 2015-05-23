@@ -66,18 +66,18 @@ class Chats
   #   [401, '']
   # end
 
-  # # Delete my account
-  # # curl -i -X DELETE -H 'Authorization: Bearer 1|12345678901234567890123456789012' http://localhost:5100/me
-  # def me_delete
-  #   user_id, session_id = parse_authorization_header
-  #   if user_id
-  #     POSTGRES.exec_params('SELECT me_delete($1, $2)', [user_id, session_id]) do |r|
-  #       if r.num_tuples == 1
-  #         return [200, '']
-  #       end
-  #     end
-  #   end
-  #   set_www_authenticate_header
-  #   [401, '']
-  # end
+  # Delete my account
+  # curl -i -X DELETE -H 'Authorization: Bearer 1|12345678901234567890123456789012' http://localhost:5100/me
+  def me_delete
+    user_id, session_id = parse_authorization_header
+    if user_id
+      POSTGRES.exec_params('SELECT me_delete($1, $2)', [user_id, session_id]) do |r|
+        if r.num_tuples == 1
+          return [200, '']
+        end
+      end
+    end
+    set_www_authenticate_header
+    [401, '']
+  end
 end

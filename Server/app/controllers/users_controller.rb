@@ -14,12 +14,14 @@ class Chats
   end
 
   # Sign up: Create user with phone, key, first_name, and last_name
-  # curl -i -H 'Authorization: Bearer 2102390602|12345678901234567890123456789012' -d first_name=Matt -d last_name='Di Pasquale' http://localhost:5100/users
+  # curl -i -d phone=2102390602 -d key=abc123 -d first_name=Matt -d last_name='Di Pasquale' http://localhost:5100/users
   def users_post
-    phone, key = parse_authorization_header
-    if phone
-      params = Rack::Request.new(@env).POST
+    params = Rack::Request.new(@env).POST
 
+    phone = params['phone']
+    key = params['key']
+
+    if phone && key
       # Validate first_name
       first_name = params['first_name']
       if string_strip_blank?(first_name)

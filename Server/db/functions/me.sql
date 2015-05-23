@@ -55,14 +55,14 @@ LANGUAGE SQL;
 -- $$
 -- LANGUAGE SQL;
 
--- -- Delete user with `user_id` & `session_id`
--- CREATE FUNCTION me_delete(bigint, uuid) RETURNS SETOF boolean AS
--- $$
---     DELETE FROM users u
---     USING sessions s
---     WHERE u.id = $1
---     AND s.user_id = u.id
---     AND s.id = $2
---     RETURNING TRUE;
--- $$
--- LANGUAGE SQL;
+-- Delete user & related session with user_id & session_id
+CREATE FUNCTION me_delete(bigint, uuid) RETURNS SETOF boolean AS
+$$
+    DELETE FROM users u
+    USING sessions s
+    WHERE u.id = $1
+    AND u.id = s.user_id
+    AND s.id = $2
+    RETURNING TRUE;
+$$
+LANGUAGE SQL;

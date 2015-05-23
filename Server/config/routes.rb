@@ -17,6 +17,7 @@ class Chats
       case method
       when 'GET' then me_get
       when 'PATCH' then me_patch
+      when 'DELETE' then me_delete
       end
     when '/sessions'
       case method
