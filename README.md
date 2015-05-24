@@ -4,7 +4,7 @@ A REST server for [Chats][1]
 
 ## Passwordless Authentication
 
-![Signup-Login Flow][2]
+![Signup/Login Flow][2]
 
 ## Technology
 
@@ -36,7 +36,7 @@ This project is released under the [Unlicense][8].
 
 
   [1]: https://github.com/acani/Chats
-  [2]: https://github.com/acani/Chats-Server-REST/raw/master/Documentation/SignupLoginFlow/SignupLoginFlow.jpg
+  [2]: doc/signup_login_flow/signup_login_flow.jpg
   [3]: http://rack.github.io
   [4]: https://www.ruby-lang.org
   [5]: http://www.postgresql.org
