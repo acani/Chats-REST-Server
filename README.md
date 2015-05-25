@@ -15,13 +15,13 @@ A REST server for [Chats][1]
 
 ## Instructions
 
-To install & test locally:
+To install, run, and test local server:
 
 1. Install & update Homebrew
 2. `brew install postgresql`
 3. `brew install ruby`
 4. `gem install foreman`
-3. All from the project's `Server` directory:
+5. All from this project's root directory:
     * `bundle install`
     * Start PostgreSQL: `postgres -D /usr/local/var/postgres`
     * In a new tab: `rake psql`
