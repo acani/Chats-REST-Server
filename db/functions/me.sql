@@ -1,6 +1,6 @@
 \c chats
 
--- Get user with `user_id` & `session_id`
+-- Get user with user_id & session_id
 CREATE FUNCTION me_get(bigint, uuid) RETURNS TABLE(u bigint, p char(32), f varchar(75), l varchar(75), m char(10)) AS
 $$
     SELECT u.id, strip_hyphens(picture_id), first_name, last_name, phone
@@ -35,7 +35,7 @@ $$
 $$
 LANGUAGE SQL;
 
--- -- Change email with `user_id`, `session_id`, and `email`
+-- -- Change email with user_id, session_id, and email
 -- CREATE FUNCTION email_set(bigint, uuid, text) RETURNS SETOF boolean AS
 -- $$
 --     WITH s AS (

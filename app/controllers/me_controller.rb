@@ -1,5 +1,5 @@
 class Chats
-  # Get me: `id`, `pciture_id`, `first_name`, `last_name`
+  # Get me: id, picture_id, first_name, last_name
   # curl -i -H 'Authorization: Bearer 1|12345678901234567890123456789012' http://localhost:5100/me
   def me_get
     user_id, session_id = parse_authorization_header
@@ -16,7 +16,7 @@ class Chats
     [401, '']
   end
 
-  # Update me: `first_name`, `last_name`
+  # Update me: first_name, last_name
   # curl -i -X PATCH -H 'Authorization: Bearer 1|12345678901234567890123456789012' -d phone='2102390603' -d first_name=John -d last_name='Appleseed' http://localhost:5100/me
   def me_patch
     user_id, session_id = parse_authorization_header

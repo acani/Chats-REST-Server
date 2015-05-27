@@ -1,6 +1,6 @@
 \c chats
 
--- Log in: Get/create session ID with `phone` & `code`
+-- Log in: Get/create session ID with phone & code
 -- Reuse one session per user across multiple devices.
 CREATE FUNCTION sessions_post(char(10), int) RETURNS TABLE(u bigint, s char(32)) AS
 $$
@@ -34,7 +34,7 @@ $$
 $$
 LANGUAGE SQL;
 
--- Log out: Delete session with `user_id` & `id`
+-- Log out: Delete session with user_id & session_id
 CREATE FUNCTION sessions_delete(bigint, uuid) RETURNS SETOF boolean AS
 $$
     DELETE FROM sessions

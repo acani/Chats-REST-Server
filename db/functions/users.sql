@@ -9,7 +9,7 @@ $$
 $$
 LANGUAGE SQL STABLE;
 
--- Sign up: Create user & session with `phone`, `key`, `first_name`, and `last_name`
+-- Sign up: Create user & session with phone, key, first_name, and last_name
 CREATE FUNCTION users_post(char(10), uuid, varchar(75), varchar(75)) RETURNS SETOF bigint AS
 $$
     WITH d AS (
