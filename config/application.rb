@@ -6,7 +6,7 @@ require 'securerandom'
 
 class Chats
   uri = URI.parse(ENV['DATABASE_URL'])
-  POSTGRES = PG.connect(uri.host, uri.port, nil, nil, uri.path[1..-1], uri.user, uri.password)
+  $pg = PG.connect(uri.host, uri.port, nil, nil, uri.path[1..-1], uri.user, uri.password)
   AWS_S3_BUCKET = Aws::S3::Resource.new.bucket('acani-chats')
 end
 

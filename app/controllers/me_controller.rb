@@ -4,7 +4,7 @@ class Chats
   def me_get
     user_id, session_id = parse_authorization_header
     if user_id
-      POSTGRES.exec_params('SELECT * FROM me_get($1, $2)', [user_id, session_id]) do |r|
+      $pg.exec_params('SELECT * FROM me_get($1, $2)', [user_id, session_id]) do |r|
         if r.num_tuples == 1
           values = r.values[0]
           picture_id = values[1] ? '","picture_id":"'+values[1] : ''
@@ -40,7 +40,7 @@ class Chats
         return [400, '{"message":"Last name is required."}']
       end
 
-      POSTGRES.exec_params('SELECT me_patch($1, $2, $3, $4)', [user_id, session_id, first_name, last_name]) do |r|
+      $pg.exec_params('SELECT me_patch($1, $2, $3, $4)', [user_id, session_id, first_name, last_name]) do |r|
         if r.num_tuples == 1
           return [200, '']
         end
@@ -71,7 +71,7 @@ class Chats
   def me_delete
     user_id, session_id = parse_authorization_header
     if user_id
-      POSTGRES.exec_params('SELECT me_delete($1, $2)', [user_id, session_id]) do |r|
+      $pg.exec_params('SELECT me_delete($1, $2)', [user_id, session_id]) do |r|
         if r.num_tuples == 1
           return [200, '']
         end

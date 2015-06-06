@@ -2,7 +2,7 @@ class Chats
   # Get all users
   # curl -i http://localhost:5100/users
   def users_get
-    POSTGRES.exec('SELECT * FROM users_get()') do |r|
+    $pg.exec('SELECT * FROM users_get()') do |r|
       users = []
       r.each_row do |t|
         user = {id: Integer(t[0]), name: {first: t[2], last: t[3]}}
@@ -34,7 +34,7 @@ class Chats
         return [400, '{"message":"Last name is required."}']
       end
 
-      POSTGRES.exec_params('SELECT * FROM users_post($1, $2, $3, $4)', [phone, key, first_name, last_name]) do |r|
+      $pg.exec_params('SELECT * FROM users_post($1, $2, $3, $4)', [phone, key, first_name, last_name]) do |r|
         if r.num_tuples == 1
           access_token = build_access_token(r.getvalue(0, 0), key)
           return [201, '{"access_token":"'+access_token+'"}']

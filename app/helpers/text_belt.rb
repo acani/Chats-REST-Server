@@ -16,6 +16,7 @@ class Chats
       else
         {'success' => false, 'message' => "Couldn't send text message."}
       end
+      # {'success' => true} # test
     end
   end
 end

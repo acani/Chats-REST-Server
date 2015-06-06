@@ -26,13 +26,13 @@ class ChatsTest < MiniTest::Test
   end
 
   def teardown
-    Chats::POSTGRES.exec('BEGIN').clear
+    $pg.exec('BEGIN').clear
     delete_from_query = 'SELECT \'DELETE FROM "\' || tablename || \'";\' FROM pg_tables WHERE schemaname = \'public\''
     alter_sequence_query = 'SELECT \'ALTER SEQUENCE "\' || relname || \'" RESTART WITH 1;\' FROM pg_class WHERE relkind = \'S\''
-    Chats::POSTGRES.exec(delete_from_query + ' UNION ' + alter_sequence_query) do |result|
-      result.each_row { |t| Chats::POSTGRES.exec(t[0]).clear }
+    $pg.exec(delete_from_query + ' UNION ' + alter_sequence_query) do |result|
+      result.each_row { |t| $pg.exec(t[0]).clear }
     end
-    Chats::POSTGRES.exec('COMMIT').clear
+    $pg.exec('COMMIT').clear
   end
 
   def authorize_user(access_token)
@@ -82,16 +82,16 @@ class ChatsTest < MiniTest::Test
   end
 
   def create_user(picture_id, first_name, last_name, phone)
-    Chats::POSTGRES.exec('INSERT INTO users (picture_id, first_name, last_name, phone) VALUES ($1, $2, $3, $4) RETURNING id', [picture_id, first_name, last_name, phone]) do |r|
+    $pg.exec('INSERT INTO users (picture_id, first_name, last_name, phone) VALUES ($1, $2, $3, $4) RETURNING id', [picture_id, first_name, last_name, phone]) do |r|
       user_id = r.getvalue(0, 0)
-      Chats::POSTGRES.exec('INSERT INTO sessions VALUES ($1) RETURNING strip_hyphens(id)', [user_id]) do |r|
+      $pg.exec('INSERT INTO sessions VALUES ($1) RETURNING strip_hyphens(id)', [user_id]) do |r|
         user_id+'|'+r.getvalue(0, 0)
       end
     end
   end
 
   def get_code(phone)
-    Chats::POSTGRES.exec_params('SELECT code FROM codes WHERE phone = $1', [phone]) do |r|
+    $pg.exec_params('SELECT code FROM codes WHERE phone = $1', [phone]) do |r|
       r.getvalue(0, 0)
     end
   end
@@ -103,7 +103,7 @@ class ChatsTest < MiniTest::Test
   end
 
   def get_key(phone)
-    Chats::POSTGRES.exec_params('SELECT strip_hyphens(key) FROM keys WHERE phone = $1', [phone]) do |r|
+    $pg.exec_params('SELECT strip_hyphens(key) FROM keys WHERE phone = $1', [phone]) do |r|
       r.getvalue(0, 0)
     end
   end

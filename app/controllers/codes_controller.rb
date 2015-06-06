@@ -7,7 +7,7 @@ class Chats
     error = phone_invalid_response(phone)
     return error if error
 
-    POSTGRES.exec_params('SELECT * FROM codes_post($1)', [phone]) do |r|
+    $pg.exec_params('SELECT * FROM codes_post($1)', [phone]) do |r|
       values = r.values[0]
       result = TextBelt.send({
         number: phone,

@@ -14,7 +14,7 @@ class Chats
     error = phone_invalid_response(phone)
     return error if error
 
-    POSTGRES.exec_params('SELECT * FROM keys_post($1, $2)', [phone, code]) do |r|
+    $pg.exec_params('SELECT * FROM keys_post($1, $2)', [phone, code]) do |r|
       if r.num_tuples == 0
         [403, '{"title":"Validation Error","message":"Code is incorrect or expired."}']
       else
