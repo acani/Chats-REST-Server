@@ -1,24 +1,22 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    aws-sdk (2.0.45)
-      aws-sdk-resources (= 2.0.45)
-    aws-sdk-core (2.0.45)
-      builder (~> 3.0)
+    aws-sdk (2.1.0)
+      aws-sdk-resources (= 2.1.0)
+    aws-sdk-core (2.1.0)
       jmespath (~> 1.0)
-      multi_json (~> 1.0)
-    aws-sdk-resources (2.0.45)
-      aws-sdk-core (= 2.0.45)
-    builder (3.2.2)
+    aws-sdk-resources (2.1.0)
+      aws-sdk-core (= 2.1.0)
+    connection_pool (2.2.0)
     jmespath (1.0.2)
       multi_json (~> 1.0)
-    json (1.8.2)
-    minitest (5.6.1)
-    multi_json (1.11.0)
+    json (1.8.3)
+    minitest (5.7.0)
+    multi_json (1.11.1)
     pg (0.18.2)
     puma (2.11.3)
       rack (>= 1.1, < 2.0)
-    rack (1.6.1)
+    rack (1.6.2)
     rack-protection (1.5.3)
       rack
     rack-test (0.6.3)
@@ -29,6 +27,7 @@ PLATFORMS
 
 DEPENDENCIES
   aws-sdk
+  connection_pool
   json
   minitest
   pg
@@ -36,3 +35,6 @@ DEPENDENCIES
   rack
   rack-protection
   rack-test
+
+BUNDLED WITH
+   1.10.3

@@ -2,14 +2,16 @@ class Chats
   # Get all users
   # curl -i http://localhost:5100/users
   def users_get
-    $pg.exec('SELECT * FROM users_get()') do |r|
-      users = []
-      r.each_row do |t|
-        user = {id: Integer(t[0]), name: {first: t[2], last: t[3]}}
-        user[:picture_id] = t[1] if t[1]
-        users.push(user)
+    $pg.with do |pg|
+      pg.exec('SELECT * FROM users_get()') do |r|
+        users = []
+        r.each_row do |t|
+          user = {id: Integer(t[0]), name: {first: t[2], last: t[3]}}
+          user[:picture_id] = t[1] if t[1]
+          users.push(user)
+        end
+        [200, users.to_json]
       end
-      [200, users.to_json]
     end
   end
 
@@ -34,10 +36,12 @@ class Chats
         return [400, '{"message":"Last name is required."}']
       end
 
-      $pg.exec_params('SELECT * FROM users_post($1, $2, $3, $4)', [phone, key, first_name, last_name]) do |r|
-        if r.num_tuples == 1
-          access_token = build_access_token(r.getvalue(0, 0), key)
-          return [201, '{"access_token":"'+access_token+'"}']
+      $pg.with do |pg|
+        pg.exec_params('SELECT * FROM users_post($1, $2, $3, $4)', [phone, key, first_name, last_name]) do |r|
+          if r.num_tuples == 1
+            access_token = build_access_token(r.getvalue(0, 0), key)
+            return [201, '{"access_token":"'+access_token+'"}']
+          end
         end
       end
     end

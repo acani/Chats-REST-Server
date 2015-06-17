@@ -1,14 +1,12 @@
 require 'aws-sdk'
+require 'connection_pool'
 require 'json'
 require 'pg'
 require 'rack/protection'
 require 'securerandom'
 
-class Chats
-  uri = URI.parse(ENV['DATABASE_URL'])
-  $pg = PG.connect(uri.host, uri.port, nil, nil, uri.path[1..-1], uri.user, uri.password)
-  AWS_S3_BUCKET = Aws::S3::Resource.new.bucket('acani-chats')
-end
+uri = URI.parse(ENV['DATABASE_URL'])
+$pg = ConnectionPool.new { PG.connect(uri.host, uri.port, nil, nil, uri.path[1..-1], uri.user, uri.password) }
 
 require './config/routes'
 

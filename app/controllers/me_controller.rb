@@ -4,11 +4,13 @@ class Chats
   def me_get
     user_id, session_id = parse_authorization_header
     if user_id
-      $pg.exec_params('SELECT * FROM me_get($1, $2)', [user_id, session_id]) do |r|
-        if r.num_tuples == 1
-          values = r.values[0]
-          picture_id = values[1] ? '","picture_id":"'+values[1] : ''
-          return [200, '{"id":"'+values[0]+picture_id+'","name":{"first":"'+values[2]+'","last":"'+values[3]+'"},"phone":"'+values[4]+'"}']
+      $pg.with do |pg|
+        pg.exec_params('SELECT * FROM me_get($1, $2)', [user_id, session_id]) do |r|
+          if r.num_tuples == 1
+            values = r.values[0]
+            picture_id = values[1] ? '","picture_id":"'+values[1] : ''
+            return [200, '{"id":"'+values[0]+picture_id+'","name":{"first":"'+values[2]+'","last":"'+values[3]+'"},"phone":"'+values[4]+'"}']
+          end
         end
       end
     end
@@ -40,9 +42,11 @@ class Chats
         return [400, '{"message":"Last name is required."}']
       end
 
-      $pg.exec_params('SELECT me_patch($1, $2, $3, $4)', [user_id, session_id, first_name, last_name]) do |r|
-        if r.num_tuples == 1
-          return [200, '']
+      $pg.with do |pg|
+        pg.exec_params('SELECT me_patch($1, $2, $3, $4)', [user_id, session_id, first_name, last_name]) do |r|
+          if r.num_tuples == 1
+            return [200, '']
+          end
         end
       end
     end
@@ -71,9 +75,11 @@ class Chats
   def me_delete
     user_id, session_id = parse_authorization_header
     if user_id
-      $pg.exec_params('SELECT me_delete($1, $2)', [user_id, session_id]) do |r|
-        if r.num_tuples == 1
-          return [200, '']
+      $pg.with do |pg|
+        pg.exec_params('SELECT me_delete($1, $2)', [user_id, session_id]) do |r|
+          if r.num_tuples == 1
+            return [200, '']
+          end
         end
       end
     end

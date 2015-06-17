@@ -14,13 +14,15 @@ class Chats
     error = phone_invalid_response(phone)
     return error if error
 
-    $pg.exec_params('SELECT * FROM sessions_post($1, $2)', [phone, code]) do |r|
-      if r.num_tuples == 0
-        [403, '{"message":"Code is incorrect or expired."}']
-      else
-        values = r.values[0]
-        access_token = build_access_token(values[0], values[1])
-        [201, '{"access_token":"'+access_token+'"}']
+    $pg.with do |pg|
+      pg.exec_params('SELECT * FROM sessions_post($1, $2)', [phone, code]) do |r|
+        if r.num_tuples == 0
+          [403, '{"message":"Code is incorrect or expired."}']
+        else
+          values = r.values[0]
+          access_token = build_access_token(values[0], values[1])
+          [201, '{"access_token":"'+access_token+'"}']
+        end
       end
     end
   end
@@ -30,9 +32,11 @@ class Chats
   def sessions_delete
     user_id, session_id = parse_authorization_header
     if user_id
-      $pg.exec_params('SELECT sessions_delete($1, $2)', [user_id, session_id]) do |r|
-        if r.num_tuples == 1
-          return [200, '']
+      $pg.with do |pg|
+        pg.exec_params('SELECT sessions_delete($1, $2)', [user_id, session_id]) do |r|
+          if r.num_tuples == 1
+            return [200, '']
+          end
         end
       end
     end

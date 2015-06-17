@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 ruby '2.2.2'
 
 gem 'aws-sdk'
+gem 'connection_pool'
 gem 'json'
 gem 'pg'
 gem 'puma'
