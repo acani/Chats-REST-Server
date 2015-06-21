@@ -1,12 +1,12 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    aws-sdk (2.1.0)
-      aws-sdk-resources (= 2.1.0)
-    aws-sdk-core (2.1.0)
+    aws-sdk (2.1.1)
+      aws-sdk-resources (= 2.1.1)
+    aws-sdk-core (2.1.1)
       jmespath (~> 1.0)
-    aws-sdk-resources (2.1.0)
-      aws-sdk-core (= 2.1.0)
+    aws-sdk-resources (2.1.1)
+      aws-sdk-core (= 2.1.1)
     connection_pool (2.2.0)
     jmespath (1.0.2)
       multi_json (~> 1.0)
@@ -16,7 +16,7 @@ GEM
     pg (0.18.2)
     puma (2.11.3)
       rack (>= 1.1, < 2.0)
-    rack (1.6.2)
+    rack (1.6.4)
     rack-protection (1.5.3)
       rack
     rack-test (0.6.3)
@@ -37,4 +37,4 @@ DEPENDENCIES
   rack-test
 
 BUNDLED WITH
-   1.10.3
+   1.10.4
