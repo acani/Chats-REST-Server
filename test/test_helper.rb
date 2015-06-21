@@ -104,7 +104,7 @@ class ChatsTest < MiniTest::Test
 
   def get_and_assert_code(phone)
     code = Integer(get_code(phone))
-    assert code.between?(1000, 9999)
+    assert code.between?(0, 9999)
     code
   end
 

@@ -1,7 +1,7 @@
 \c chats
 
 -- Enter phone: Create code
-CREATE FUNCTION codes_post(char(10)) RETURNS TABLE(e boolean, c int) AS
+CREATE FUNCTION codes_post(char(10)) RETURNS TABLE(e boolean, c smallint) AS
 $$
     WITH u AS (
         -- Update code if there's one

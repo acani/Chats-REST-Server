@@ -24,7 +24,7 @@ class Chats
   def code_invalid_message(code)
     if string_strip_blank?(code)
       'Code is required.'
-    elsif code !~ /\A[1-9]\d{3}\z/
+    elsif code !~ /\A\d{4}\z/
       'Code is invalid. It must be 4 digits.'
     end
   end

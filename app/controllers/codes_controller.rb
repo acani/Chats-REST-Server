@@ -12,7 +12,7 @@ class Chats
         values = r.values[0]
         result = TextBelt.send({
           number: phone,
-          message: "Your Chats code is #{values[1]}"
+          message: "Your Chats code is " + values[1].rjust(4, '0')
         })
         if result['success']
           [values[0] ? 200 : 201, '']
