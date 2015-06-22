@@ -1,49 +1,40 @@
 class Chats
-  def phone_invalid_response(phone)
-    message = phone_invalid_message(phone)
-    if message
-      return [400, '{"message":"'+message+'"}']
+  def phone_invalid_response!(phone)
+    unless phone_valid?(phone)
+      return [400, '{"message":"Phone must be 10 digits."}']
     end
   end
 
-  def phone_invalid_message(phone)
-    if string_strip_blank?(phone)
-      'Phone is required.'
-    elsif phone !~ /\A[2-9]\d\d[2-9]\d{6}\z/
-      'Phone is invalid. It must be 10 digits.'
+  def code_invalid_response!(code)
+    unless code_valid?(code)
+      return [400, '{"message":"Code must be 4 digits."}']
     end
   end
 
-  def code_invalid_response(code)
-    message = code_invalid_message(code)
-    if message
-      return [400, '{"message":"'+message+'"}']
-    end
+  def phone_valid?(phone)
+    return false unless phone
+    phone.strip!
+    !(phone !~ /\A[2-9]\d\d[2-9]\d{6}\z/)
   end
 
-  def code_invalid_message(code)
-    if string_strip_blank?(code)
-      'Code is required.'
-    elsif code !~ /\A\d{4}\z/
-      'Code is invalid. It must be 4 digits.'
-    end
-  end
-
-  def string_strip_empty?(string)
-    if string
-      string.strip!
-      string.empty?
+  def code_valid?(code)
+    return false unless code
+    code.strip!
+    if code =~ /\A\d{4}\z/
+      code.sub!(/\A0+/, '') # strips leading zeros
+      true
     else
       false
     end
   end
 
-  def string_strip_blank?(string)
-    if string
-      string.strip!
-      string.empty?
-    else
-      true
-    end
+  def key_valid?(key)
+    return false unless key
+    key.strip!
+    !(key !~ /\A[0-9a-f]{32}\z/)
+  end
+
+  def string_is_blank_after_strip!(string)
+    !string || (string.strip! || string).empty?
   end
 end

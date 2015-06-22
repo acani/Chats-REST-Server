@@ -19,20 +19,17 @@ class Chats
   # curl -i -d phone=2102390602 -d key=abc123 -d first_name=Matt -d last_name='Di Pasquale' http://localhost:5100/users
   def users_post
     params = Rack::Request.new(@env).POST
-
     phone = params['phone']
     key = params['key']
 
-    if phone && key
-      # Validate first_name
+    if phone_valid?(phone) && key_valid?(key)
+      # Require first_name & last_name
       first_name = params['first_name']
-      if string_strip_blank?(first_name)
+      last_name = params['last_name']
+      if string_is_blank_after_strip!(first_name)
         return [400, '{"message":"First name is required."}']
       end
-
-      # Validate last_name
-      last_name = params['last_name']
-      if string_strip_blank?(last_name)
+      if string_is_blank_after_strip!(last_name)
         return [400, '{"message":"Last name is required."}']
       end
 
@@ -46,6 +43,6 @@ class Chats
       end
     end
     set_www_authenticate_header
-    [401, '{"title":"Unauthorized","message":"Please reverify your phone and try again."}']
+    [401, '{"message":"Incorrect phone or key."}']
   end
 end

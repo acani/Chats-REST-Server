@@ -1,7 +1,7 @@
 \c chats
 
 -- Update/create key with phone & code
-CREATE FUNCTION keys_post(char(10), int) RETURNS SETOF char(32) AS
+CREATE FUNCTION keys_post(char(10), smallint) RETURNS SETOF char(32) AS
 $$
     WITH d AS (
         -- Delete matching phone & code

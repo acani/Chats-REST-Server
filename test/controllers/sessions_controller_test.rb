@@ -10,27 +10,27 @@ class SessionsTest < ChatsTest
 
     # Test no code
     post '/sessions'
-    assert_return [400, '{"message":"Code is required."}']
+    assert_return [400, '{"message":"Code must be 4 digits."}']
 
     # Test empty code
     post '/sessions', {code: ''}
-    assert_return [400, '{"message":"Code is required."}']
+    assert_return [400, '{"message":"Code must be 4 digits."}']
 
     # Test invalid code
     post '/sessions', {code: '123456'}
-    assert_return [400, '{"message":"Code is invalid. It must be 4 digits."}']
+    assert_return [400, '{"message":"Code must be 4 digits."}']
 
     # Test no phone
     post '/sessions', {code: '1234'}
-    assert_return [400, '{"message":"Phone is required."}']
+    assert_return [400, '{"message":"Phone must be 10 digits."}']
 
     # Test empty phone
     post '/sessions', {phone: '', code: '1234'}
-    assert_return [400, '{"message":"Phone is required."}']
+    assert_return [400, '{"message":"Phone must be 10 digits."}']
 
     # Test invalid phone
     post '/sessions', {phone: '1234567890', code: '1234'}
-    assert_return [400, '{"message":"Phone is invalid. It must be 10 digits."}']
+    assert_return [400, '{"message":"Phone must be 10 digits."}']
 
     # Test incorrect code
     incorrect_code = (code == '1234' ? '1235' : '1234')

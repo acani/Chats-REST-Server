@@ -4,7 +4,7 @@ class Chats
   def codes_post
     # Validate phone
     phone = Rack::Request.new(@env).POST['phone']
-    error = phone_invalid_response(phone)
+    error = phone_invalid_response!(phone)
     return error if error
 
     $pg.with do |pg|

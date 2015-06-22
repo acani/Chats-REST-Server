@@ -2,7 +2,7 @@
 
 -- Log in: Get/create session ID with phone & code
 -- Reuse one session per user across multiple devices.
-CREATE FUNCTION sessions_post(char(10), int) RETURNS TABLE(u bigint, s char(32)) AS
+CREATE FUNCTION sessions_post(char(10), smallint) RETURNS TABLE(u bigint, s char(32)) AS
 $$
     WITH d AS (
         -- Verify code and then delete

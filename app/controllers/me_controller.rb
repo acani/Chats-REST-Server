@@ -27,19 +27,23 @@ class Chats
       first_name = params['first_name']
       last_name = params['last_name']
 
-      # Requrie at least one field
+      # No change requested
       unless first_name || last_name
-        return [200, '']
+        return [400, '{"message":"No changes requested."}']
       end
 
-      # Validate first_name
-      if string_strip_empty?(first_name)
-        return [400, '{"message":"First name is required."}']
+      # Reject blank strings
+      if first_name
+        first_name.strip!
+        if first_name.empty?
+          return [400, '{"message":"First name is required."}']
+        end
       end
-
-      # Validate last_name
-      if string_strip_empty?(last_name)
-        return [400, '{"message":"Last name is required."}']
+      if last_name
+        last_name.strip!
+        if last_name.empty?
+          return [400, '{"message":"Last name is required."}']
+        end
       end
 
       $pg.with do |pg|

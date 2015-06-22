@@ -6,12 +6,12 @@ class Chats
 
     # Validate code
     code = params['code']
-    error = code_invalid_response(code)
+    error = code_invalid_response!(code)
     return error if error
 
     # Validate phone
     phone = params['phone']
-    error = phone_invalid_response(phone)
+    error = phone_invalid_response!(phone)
     return error if error
 
     $pg.with do |pg|

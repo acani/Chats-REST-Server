@@ -37,7 +37,7 @@ class MeTest < ChatsTest
     authorize_user(@access_token) do
       # Test no fields
       patch '/me'
-      assert_return 200
+      assert_return [400, '{"message":"No changes requested."}']
 
       # Test empty first_name
       patch '/me', {first_name: ''}

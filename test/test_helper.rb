@@ -97,14 +97,14 @@ class ChatsTest < MiniTest::Test
   def get_code(phone)
     $pg.with do |pg|
       pg.exec_params('SELECT code FROM codes WHERE phone = $1', [phone]) do |r|
-        r.getvalue(0, 0)
+        r.getvalue(0, 0).rjust(4, '0')
       end
     end
   end
 
   def get_and_assert_code(phone)
-    code = Integer(get_code(phone))
-    assert code.between?(0, 9999)
+    code = get_code(phone)
+    assert_match /\A\d{4}\z/, code
     code
   end
 

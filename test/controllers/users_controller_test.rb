@@ -18,63 +18,70 @@ class UsersTest < ChatsTest
     post '/keys', {phone: phone, code: code}
     key = get_key(phone)
 
-    valid_params = {first_name: 'John', last_name: 'Appleseed'}
+    valid_auth = {phone: phone, key: key}
+    valid_fields = {first_name: 'John', last_name: 'Appleseed'}
     unauthorized_response = [
       401,
       {'WWW-Authenticate' => 'Basic realm="Chats"'},
-      '{"title":"Unauthorized","message":"Please reverify your phone and try again."}'
+      '{"message":"Incorrect phone or key."}'
     ]
 
-    # Test invalid access_token
-    authorize_user('invalid-access_token') do
-      post '/users'
-      assert_return unauthorized_response
-    end
+    # Test no phone or key
+    post '/users'
+    assert_return unauthorized_response
 
-    authorize_user(phone+'|'+key) do
-      # Test no first_name
-      post '/users'
-      assert_return [400, '{"message":"First name is required."}']
+    # Test invalid phone
+    post '/users', {phone: '123', key: key}.merge(valid_fields)
+    assert_return unauthorized_response
 
-      # Test empty first_name
-      post '/users', {first_name: ''}
-      assert_return [400, '{"message":"First name is required."}']
+    # Test invalid key
+    post '/users', {phone: phone, key: 'abc123'}.merge(valid_fields)
+    assert_return unauthorized_response
 
-      # Test no last_name
-      post '/users', {first_name: 'Matt'}
-      assert_return [400, '{"message":"Last name is required."}']
-
-      # Test empty last_name
-      post '/users', {first_name: 'Matt', last_name: ''}
-      assert_return [400, '{"message":"Last name is required."}']
-    end
-
-    # Test incorrect key
-    authorize_user(phone+'|'+SecureRandom.hex) do
-      post '/users', valid_params
-      assert_return unauthorized_response
-    end
+    # Test invalid phone & key
+    post '/users', {phone: '123', key: 'abc123'}.merge(valid_fields)
+    assert_return unauthorized_response
 
     # Test incorrect phone
-    authorize_user('2345678902|'+key) do
-      post '/users', valid_params
-      assert_return unauthorized_response
-    end
+    post '/users', {phone: '2345678902', key: key}.merge(valid_fields)
+    assert_return unauthorized_response
 
-    # Test correct phone & key
-    authorize_user(phone+'|'+key) do
-      post '/users', valid_params
-      assert_return [201, /\A\{"access_token":"2\|[0-9a-f]{32}"\}\z/]
-    end
+    # Test incorrect key
+    post '/users', {phone: phone, key: SecureRandom.hex}.merge(valid_fields)
+    assert_return unauthorized_response
+
+    # Test incorrect phone & key
+    post '/users', {phone: '2345678902', key: SecureRandom.hex}.merge(valid_fields)
+    assert_return unauthorized_response
+
+    ### Test correct phone & key
+
+    # Test no first_name
+    post '/users', valid_auth
+    assert_return [400, '{"message":"First name is required."}']
+
+    # Test empty first_name
+    post '/users', valid_auth.merge(first_name: '')
+    assert_return [400, '{"message":"First name is required."}']
+
+    # Test no last_name
+    post '/users', valid_auth.merge(first_name: 'Matt')
+    assert_return [400, '{"message":"Last name is required."}']
+
+    # Test empty last_name
+    post '/users', valid_auth.merge({first_name: 'Matt', last_name: ''})
+    assert_return [400, '{"message":"Last name is required."}']
+
+    # Test correct valid params
+    post '/users', valid_auth.merge(valid_fields)
+    assert_return [201, /\A\{"access_token":"2\|[0-9a-f]{32}"\}\z/]
 
     # Confirm previous user creation
     get '/users'
     assert_return /\A\[\{"id":1,"name":\{"first":"Matt","last":"Di Pasquale"\},"picture_id":"[0-9a-f]{32}"\},\{"id":2,"name":\{"first":"John","last":"Appleseed"\}\}\]\z/
 
     # Test that key only works once
-    authorize_user(phone+'|'+key) do
-      post '/users', valid_params
-      assert_return unauthorized_response
-    end
+    post '/users', valid_auth.merge(valid_fields)
+    assert_return unauthorized_response
   end
 end
