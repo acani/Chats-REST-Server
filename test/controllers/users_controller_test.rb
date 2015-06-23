@@ -19,7 +19,7 @@ class UsersTest < ChatsTest
     key = get_key(phone)
 
     valid_auth = {phone: phone, key: key}
-    valid_fields = {first_name: 'John', last_name: 'Appleseed'}
+    valid_fields = {first_name: 'John', last_name: 'Appleseed', email: 'john@gmail.com'}
     unauthorized_response = [
       401,
       {'WWW-Authenticate' => 'Basic realm="Chats"'},
@@ -58,19 +58,19 @@ class UsersTest < ChatsTest
 
     # Test no first_name
     post '/users', valid_auth
-    assert_return [400, '{"message":"First name is required."}']
+    assert_return [400, '{"message":"First name must be between 1 & 50 characters."}']
 
     # Test empty first_name
     post '/users', valid_auth.merge(first_name: '')
-    assert_return [400, '{"message":"First name is required."}']
+    assert_return [400, '{"message":"First name must be between 1 & 50 characters."}']
 
     # Test no last_name
     post '/users', valid_auth.merge(first_name: 'Matt')
-    assert_return [400, '{"message":"Last name is required."}']
+    assert_return [400, '{"message":"Last name must be between 1 & 50 characters."}']
 
     # Test empty last_name
     post '/users', valid_auth.merge({first_name: 'Matt', last_name: ''})
-    assert_return [400, '{"message":"Last name is required."}']
+    assert_return [400, '{"message":"Last name must be between 1 & 50 characters."}']
 
     # Test correct valid params
     post '/users', valid_auth.merge(valid_fields)

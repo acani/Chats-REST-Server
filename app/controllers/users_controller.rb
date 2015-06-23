@@ -23,18 +23,21 @@ class Chats
     key = params['key']
 
     if phone_valid?(phone) && key_valid?(key)
-      # Require first_name & last_name
+      # Validate first_name, last_name, and email
       first_name = params['first_name']
+      error = name_invalid_response!('First', first_name)
+      return error if error
+
       last_name = params['last_name']
-      if string_is_blank_after_strip!(first_name)
-        return [400, '{"message":"First name is required."}']
-      end
-      if string_is_blank_after_strip!(last_name)
-        return [400, '{"message":"Last name is required."}']
-      end
+      error = name_invalid_response!('Last', last_name)
+      return error if error
+
+      email = params['email']
+      error = email_invalid_response!(email)
+      return error if error
 
       $pg.with do |pg|
-        pg.exec_params('SELECT * FROM users_post($1, $2, $3, $4)', [phone, key, first_name, last_name]) do |r|
+        pg.exec_params('SELECT * FROM users_post($1, $2, $3, $4, $5)', [phone, key, first_name, last_name, email]) do |r|
           if r.num_tuples == 1
             access_token = build_access_token(r.getvalue(0, 0), key)
             return [201, '{"access_token":"'+access_token+'"}']

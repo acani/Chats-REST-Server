@@ -22,7 +22,7 @@ class ChatsTest < MiniTest::Test
   def setup
     # Create a user
     @phone = '2102390602'
-    @access_token = create_user(SecureRandom.hex, 'Matt', 'Di Pasquale', @phone)
+    @access_token = create_user(@phone, SecureRandom.hex, 'Matt', 'Di Pasquale', 'matt@gmail.com')
   end
 
   def teardown
@@ -83,9 +83,9 @@ class ChatsTest < MiniTest::Test
     headers_base
   end
 
-  def create_user(picture_id, first_name, last_name, phone)
+  def create_user(phone, picture_id, first_name, last_name, email)
     $pg.with do |pg|
-      pg.exec('INSERT INTO users (picture_id, first_name, last_name, phone) VALUES ($1, $2, $3, $4) RETURNING id', [picture_id, first_name, last_name, phone]) do |r|
+      pg.exec('INSERT INTO users (phone, picture_id, first_name, last_name, email) VALUES ($1, $2, $3, $4, $5) RETURNING id', [phone, picture_id, first_name, last_name, email]) do |r|
         user_id = r.getvalue(0, 0)
         pg.exec('INSERT INTO sessions VALUES ($1) RETURNING strip_hyphens(id)', [user_id]) do |r|
           user_id+'|'+r.getvalue(0, 0)

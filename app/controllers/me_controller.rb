@@ -34,16 +34,12 @@ class Chats
 
       # Reject blank strings
       if first_name
-        first_name.strip!
-        if first_name.empty?
-          return [400, '{"message":"First name is required."}']
-        end
+        error = name_invalid_response!('First', first_name)
+        return error if error
       end
       if last_name
-        last_name.strip!
-        if last_name.empty?
-          return [400, '{"message":"Last name is required."}']
-        end
+        error = name_invalid_response!('Last', last_name)
+        return error if error
       end
 
       $pg.with do |pg|

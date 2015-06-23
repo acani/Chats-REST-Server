@@ -41,11 +41,11 @@ class MeTest < ChatsTest
 
       # Test empty first_name
       patch '/me', {first_name: ''}
-      assert_return [400, '{"message":"First name is required."}']
+      assert_return [400, '{"message":"First name must be between 1 & 50 characters."}']
 
       # Test empty last_name
       patch '/me', {last_name: ''}
-      assert_return [400, '{"message":"Last name is required."}']
+      assert_return [400, '{"message":"Last name must be between 1 & 50 characters."}']
 
       # Test first_name only
       patch '/me', {first_name: 'Matty'}

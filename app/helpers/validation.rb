@@ -1,13 +1,25 @@
 class Chats
   def phone_invalid_response!(phone)
     unless phone_valid?(phone)
-      return [400, '{"message":"Phone must be 10 digits."}']
+      [400, '{"message":"Phone must be 10 digits."}']
     end
   end
 
   def code_invalid_response!(code)
     unless code_valid?(code)
-      return [400, '{"message":"Code must be 4 digits."}']
+      [400, '{"message":"Code must be 4 digits."}']
+    end
+  end
+
+  def name_invalid_response!(name_type, name)
+    unless !string_is_blank_after_strip!(name) && name.length <= 50
+      [400, '{"message":"'+name_type+' name must be between 1 & 50 characters."}']
+    end
+  end
+
+  def email_invalid_response!(email)
+    unless !string_is_blank_after_strip!(email) && email.length.between?(3, 254) && email.include?('@')
+      [400, '{"message":"Email must be between 3 & 254 characters and have an at sign."}']
     end
   end
 

@@ -5,6 +5,7 @@ CREATE TABLE users (
     created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     phone char(10) NOT NULL UNIQUE,
     picture_id uuid,
-    first_name varchar(75) NOT NULL CHECK (first_name <> ''),
-    last_name varchar(75) NOT NULL CHECK (last_name <> '')
+    first_name varchar(50) NOT NULL CHECK (first_name <> ''),
+    last_name varchar(50) NOT NULL CHECK (last_name <> ''),
+    email varchar(254) NOT NULL
 );

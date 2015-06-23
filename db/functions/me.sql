@@ -1,7 +1,7 @@
 \c chats
 
 -- Get user with user_id & session_id
-CREATE FUNCTION me_get(bigint, uuid) RETURNS TABLE(u bigint, p char(32), f varchar(75), l varchar(75), m char(10)) AS
+CREATE FUNCTION me_get(bigint, uuid) RETURNS TABLE(u bigint, p char(32), f varchar(50), l varchar(50), m char(10)) AS
 $$
     SELECT u.id, strip_hyphens(picture_id), first_name, last_name, phone
     FROM users u, sessions s
@@ -12,7 +12,7 @@ $$
 LANGUAGE SQL;
 
 -- Patch user first_name, last_name with user_id & session_id
-CREATE FUNCTION me_patch(bigint, uuid, varchar(75), varchar(75)) RETURNS SETOF boolean AS
+CREATE FUNCTION me_patch(bigint, uuid, varchar(50), varchar(50)) RETURNS SETOF boolean AS
 $$
     WITH s AS (
         SELECT 1
