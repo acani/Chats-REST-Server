@@ -54,22 +54,6 @@ class Chats
     [401, '']
   end
 
-  # # Create a presigned post
-  # # https://devcenter.heroku.com/articles/direct-to-s3-image-uploads-in-rails#pre-signed-post
-  # # curl -i -X POST -H 'Authorization: Bearer 1|12345678901234567890123456789012' http://localhost:5100/presigned_posts
-  # def presigned_posts_post
-  #   user_id, session_id = parse_authorization_header
-  #   if user_id
-  #     post = AWS_S3_BUCKET.presigned_post({
-  #       key: "/users/#{SecureRandom.hex}/${filename}",
-  #       acl: 'public-read'
-  #     })
-  #     return [200, '{"url":"'+post.url+'","fields":'+post.fields.to_json+'}']
-  #   end
-  #   set_www_authenticate_header
-  #   [401, '']
-  # end
-
   # Delete my account
   # curl -i -X DELETE -H 'Authorization: Bearer 1|12345678901234567890123456789012' http://localhost:5100/me
   def me_delete

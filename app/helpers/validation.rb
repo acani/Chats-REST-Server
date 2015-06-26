@@ -11,6 +11,12 @@ class Chats
     end
   end
 
+  def picture_id_invalid_response!(picture_id)
+    unless !picture_id || uuid_valid?(picture_id)
+      [400, '{"message":"Picture ID must be 32 lowercase hexidecimal digits."}']
+    end
+  end
+
   def name_invalid_response!(name_type, name)
     unless !string_is_blank_after_strip!(name) && name.length <= 50
       [400, '{"message":"'+name_type+' name must be between 1 & 50 characters."}']
@@ -25,13 +31,11 @@ class Chats
 
   def phone_valid?(phone)
     return false unless phone
-    phone.strip!
     !(phone !~ /\A[2-9]\d\d[2-9]\d{6}\z/)
   end
 
   def code_valid?(code)
     return false unless code
-    code.strip!
     if code =~ /\A\d{4}\z/
       code.sub!(/\A0+/, '') # strips leading zeros
       true
@@ -40,10 +44,9 @@ class Chats
     end
   end
 
-  def key_valid?(key)
-    return false unless key
-    key.strip!
-    !(key !~ /\A[0-9a-f]{32}\z/)
+  def uuid_valid?(uuid)
+    return false unless uuid
+    !(uuid !~ /\A[0-9a-f]{32}\z/)
   end
 
   def string_is_blank_after_strip!(string)
