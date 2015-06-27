@@ -74,7 +74,7 @@ class UsersTest < ChatsTest
 
     # Test correct valid params
     post '/users', valid_auth.merge(valid_fields)
-    assert_return [201, /\A\{"access_token":"2\|[0-9a-f]{32}"\}\z/]
+    assert_return [201, /\A\{"access_token":"2\.[0-9a-f]{32}"\}\z/]
 
     # Confirm previous user creation
     get '/users'

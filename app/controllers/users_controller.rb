@@ -75,7 +75,7 @@ class Chats
     return error if error
 
     user_id = '23'
-    body = {access_token: '23|0123456789abcdef0123456789abcdef'}
+    body = {access_token: '23.0123456789abcdef0123456789abcdef'}
     if picture_id
       fields = Aws::S3::Resource.new.bucket('acani-chats').presigned_post({
         acl: 'public-read',

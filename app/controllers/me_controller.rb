@@ -1,6 +1,6 @@
 class Chats
   # Get me: id, picture_id, first_name, last_name
-  # curl -i -H 'Authorization: Bearer 1|12345678901234567890123456789012' http://localhost:5100/me
+  # curl -i -H 'Authorization: Bearer 1.0123456789abcdef0123456789abcdef' http://localhost:5100/me
   def me_get
     user_id, session_id = parse_authorization_header
     if user_id
@@ -19,7 +19,7 @@ class Chats
   end
 
   # Update me: first_name, last_name
-  # curl -i -X PATCH -H 'Authorization: Bearer 1|12345678901234567890123456789012' -d phone='2102390603' -d first_name=John -d last_name='Appleseed' http://localhost:5100/me
+  # curl -i -X PATCH -H 'Authorization: Bearer 1.0123456789abcdef0123456789abcdef' -d phone='2102390603' -d first_name=John -d last_name='Appleseed' http://localhost:5100/me
   def me_patch
     user_id, session_id = parse_authorization_header
     if user_id
@@ -55,7 +55,7 @@ class Chats
   end
 
   # Delete my account
-  # curl -i -X DELETE -H 'Authorization: Bearer 1|12345678901234567890123456789012' http://localhost:5100/me
+  # curl -i -X DELETE -H 'Authorization: Bearer 1.0123456789abcdef0123456789abcdef' http://localhost:5100/me
   def me_delete
     user_id, session_id = parse_authorization_header
     if user_id

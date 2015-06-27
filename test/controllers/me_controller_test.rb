@@ -9,7 +9,7 @@ class MeTest < ChatsTest
     end
 
     # Test incorrect access_token
-    authorize_user('9|12345678901234567890123456789012') do
+    authorize_user('9.0123456789abcdef0123456789abcdef') do
       get '/me'
       assert_return [401, {'WWW-Authenticate' => 'Basic realm="Chats"'}, '']
     end
@@ -29,7 +29,7 @@ class MeTest < ChatsTest
     end
 
     # Test incorrect access_token
-    authorize_user('9|12345678901234567890123456789012') do
+    authorize_user('9.0123456789abcdef0123456789abcdef') do
       patch '/me', {first_name: 'Matty', last_name: 'D'}
       assert_return [401, {'WWW-Authenticate' => 'Basic realm="Chats"'}, '']
     end
@@ -73,11 +73,11 @@ class MeTest < ChatsTest
   #   assert_return 404
   #
   #   # Test user not found
-  #   authorize_user('123456789012345678901234567890122') { delete '/me' }
+  #   authorize_user('2.0123456789abcdef0123456789abcdef') { delete '/me' }
   #   assert_return 401
   #
   #   # Test unauthorized
-  #   authorize_user('123456789012345678901234567890121') { delete '/me' }
+  #   authorize_user('1.0123456789abcdef0123456789abcdef') { delete '/me' }
   #   assert_return 401
   #
   #   # Test successful delete

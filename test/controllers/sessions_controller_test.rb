@@ -43,7 +43,7 @@ class SessionsTest < ChatsTest
 
     # Test correct phone & code
     post '/sessions', {phone: @phone, code: code}
-    assert_return [201, /\A\{"access_token":"1\|[0-9a-f]{32}"\}\z/]
+    assert_return [201, /\A\{"access_token":"1\.[0-9a-f]{32}"\}\z/]
 
     # Test that code only works once
     post '/sessions', {phone: @phone, code: code}
@@ -58,7 +58,7 @@ class SessionsTest < ChatsTest
     end
 
     # Test incorrect access_token
-    authorize_user('9|12345678901234567890123456789012') do
+    authorize_user('9.0123456789abcdef0123456789abcdef') do
       delete '/sessions'
       assert_return [401, {'WWW-Authenticate' => 'Basic realm="Chats"'}, '']
     end

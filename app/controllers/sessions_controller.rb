@@ -28,7 +28,7 @@ class Chats
   end
 
   # Log out: Delete a user's session
-  # curl -i -X DELETE -H 'Authorization: Bearer 1|12345678901234567890123456789012' http://localhost:5100/sessions
+  # curl -i -X DELETE -H 'Authorization: Bearer 1.0123456789abcdef0123456789abcdef' http://localhost:5100/sessions
   def sessions_delete
     user_id, session_id = parse_authorization_header
     if user_id
