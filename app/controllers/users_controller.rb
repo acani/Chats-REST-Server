@@ -48,11 +48,10 @@ class Chats
             if picture_id
               fields = Aws::S3::Resource.new.bucket('acani-chats').presigned_post({
                 acl: 'public-read',
-                content_length_range: 0..102400,
+                content_length_range: 0..3145728,
                 content_type: 'image/jpeg',
-                key: "/users/#{user_id}/#{picture_id}.jpg"
+                key: "users/#{user_id}/#{picture_id}.jpg"
               }).fields
-              ['acl', 'Content-Type', 'key'].each { |f| fields.delete(f) }
               body[:fields] = fields
             end
             return [201, body.to_json]
@@ -62,30 +61,5 @@ class Chats
     end
     set_www_authenticate_header
     [401, '{"message":"Incorrect phone or key."}']
-  end
-
-  # Create a presigned post
-  # https://devcenter.heroku.com/articles/direct-to-s3-image-uploads-in-rails#pre-signed-post
-  # curl -i -d picture_id=0123456789abcdef0123456789abcdef http://localhost:5100/presigned_post
-  def presigned_post_post
-    params = Rack::Request.new(@env).POST
-
-    picture_id = params['picture_id']
-    error = picture_id_invalid_response!(picture_id)
-    return error if error
-
-    user_id = '23'
-    body = {access_token: '23.0123456789abcdef0123456789abcdef'}
-    if picture_id
-      fields = Aws::S3::Resource.new.bucket('acani-chats').presigned_post({
-        acl: 'public-read',
-        content_length_range: 0..102400,
-        content_type: 'image/jpeg',
-        key: "/users/#{user_id}/#{picture_id}.jpg"
-      }).fields
-      ['acl', 'Content-Type', 'key'].each { |f| fields.delete(f) }
-      body[:fields] = fields
-    end
-    return [201, body.to_json]
   end
 end

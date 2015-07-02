@@ -19,10 +19,6 @@ class Chats
       when 'PATCH' then me_patch
       when 'DELETE' then me_delete
       end
-    when '/presigned_post'
-      case method
-      when 'POST' then presigned_post_post
-      end
     when '/sessions'
       case method
       when 'POST' then sessions_post
