@@ -1,74 +1,74 @@
 require 'test_helper'
 
-class MeTest < ChatsTest
+class MeTest < RESTTest
   def test_me_get
     # Test invalid access_token
     authorize_user('invalid-access_token') do
       get '/me'
-      assert_return [401, {'WWW-Authenticate' => 'Basic realm="Chats"'}, '']
+      assert_return REST::WWW_AUTHENTICATE_RESPONSE
     end
 
     # Test incorrect access_token
-    authorize_user('9.0123456789abcdef0123456789abcdef') do
+    authorize_user('1.0123456789abcdef0123456789abcdef') do
       get '/me'
-      assert_return [401, {'WWW-Authenticate' => 'Basic realm="Chats"'}, '']
+      assert_return REST::WWW_AUTHENTICATE_RESPONSE
     end
 
     # Test correct access_token
     authorize_user(@access_token) do
        get '/me'
-       assert_return [200, /\A\{"id":"1","picture_id":"[0-9a-f]{32}","name":\{"first":"Matt","last":"Di Pasquale"\},"phone":"#{@phone}"\}\z/]
+       assert_return /\A\{"id":"1","name":\{"first":"Sally","last":"Davis"\},"email":"test@example.com"\}\z/
     end
   end
 
   def test_patch_me
     # Test invalid access_token
     authorize_user('invalid-access_token') do
-      patch '/me', {first_name: 'Matty', last_name: 'D'}
-      assert_return [401, {'WWW-Authenticate' => 'Basic realm="Chats"'}, '']
+      patch '/me', {first_name: 'Sal', last_name: 'D'}
+      assert_return REST::WWW_AUTHENTICATE_RESPONSE
     end
 
     # Test incorrect access_token
-    authorize_user('9.0123456789abcdef0123456789abcdef') do
-      patch '/me', {first_name: 'Matty', last_name: 'D'}
-      assert_return [401, {'WWW-Authenticate' => 'Basic realm="Chats"'}, '']
+    authorize_user('1.0123456789abcdef0123456789abcdef') do
+      patch '/me', {first_name: 'Sal', last_name: 'D'}
+      assert_return REST::WWW_AUTHENTICATE_RESPONSE
     end
 
     authorize_user(@access_token) do
-      # Test no fields
+      # Test invalid names
       patch '/me'
-      assert_return [400, '{"message":"No changes requested."}']
-
-      # Test empty first_name
+      assert_return REST::ME_NO_CHANGES_RESPONSE
       patch '/me', {first_name: ''}
-      assert_return [400, '{"message":"First name must be between 1 & 50 characters."}']
-
-      # Test empty last_name
+      assert_return REST::FIRST_NAME_INVALID_RESPONSE
       patch '/me', {last_name: ''}
-      assert_return [400, '{"message":"Last name must be between 1 & 50 characters."}']
+      assert_return REST::LAST_NAME_INVALID_RESPONSE
+      patch '/me', {first_name: TOO_LONG_NAME}
+      assert_return REST::FIRST_NAME_INVALID_RESPONSE
+      patch '/me', {last_name: TOO_LONG_NAME}
+      assert_return REST::LAST_NAME_INVALID_RESPONSE
 
       # Test first_name only
-      patch '/me', {first_name: 'Matty'}
+      patch '/me', {first_name: 'Sal'}
       assert_return 200
       get '/me'
-      assert_equal 'Matty', JSON.parse(last_response.body)['name']['first']
+      assert_equal({'first' => 'Sal', 'last' => 'Davis'}, JSON.parse(last_response.body)['name'])
 
       # Test last_name only
       patch '/me', {last_name: 'D'}
       assert_return 200
       get '/me'
-      assert_equal 'D', JSON.parse(last_response.body)['name']['last']
+      assert_equal({'first' => 'Sal', 'last' => 'D'}, JSON.parse(last_response.body)['name'])
 
       # Test both names
-      patch '/me', {first_name: 'Matt', last_name: 'Di Pasquale'}
+      patch '/me', {first_name: 'Sally', last_name: 'Davis'}
       assert_return 200
       get '/me'
-      assert_equal({'first' => 'Matt', 'last' => 'Di Pasquale'}, JSON.parse(last_response.body)['name'])
+      assert_equal({'first' => 'Sally', 'last' => 'Davis'}, JSON.parse(last_response.body)['name'])
     end
   end
 
   # def test_delete_me
-  #   # Test no access token
+  #   # Test nil access token
   #   delete '/me'
   #   assert_return 404
   #
@@ -84,6 +84,6 @@ class MeTest < ChatsTest
   #   authorize_user(@access_token) { delete '/me' }
   #   assert_return 200
   #   authorize_client { get '/users' }
-  #   assert_return [200, '[]']
+  #   assert_return '[]'
   # end
 end

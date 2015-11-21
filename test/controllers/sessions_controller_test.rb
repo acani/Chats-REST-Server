@@ -1,66 +1,61 @@
 require 'test_helper'
 
-class SessionsTest < ChatsTest
+class SessionsTest < RESTTest
   def test_sessions_post
     # Create code
-    Chats::TextBelt.mock({'success' => true}) do
-      post '/codes', {phone: @phone}
+    REST::Mailgun.mock('200') do
+      post '/login', {email: @email}
     end
-    code = get_code(@phone)
+    code = get_code('login', @email)
 
-    # Test no code
+    # Test invalid email
     post '/sessions'
-    assert_return [400, '{"message":"Code must be 4 digits."}']
-
-    # Test empty code
-    post '/sessions', {code: ''}
-    assert_return [400, '{"message":"Code must be 4 digits."}']
+    assert_return REST::EMAIL_INVALID_RESPONSE
+    post '/sessions', {email: ''}
+    assert_return REST::EMAIL_INVALID_RESPONSE
+    post '/sessions', {email: 'invalid_email'}
+    assert_return REST::EMAIL_INVALID_RESPONSE
 
     # Test invalid code
-    post '/sessions', {code: '123456'}
-    assert_return [400, '{"message":"Code must be 4 digits."}']
+    post '/sessions', {email: @email}
+    assert_return REST::CODE_INVALID_RESPONSE
+    post '/sessions', {email: @email, code: ''}
+    assert_return REST::CODE_INVALID_RESPONSE
+    post '/sessions', {email: @email, code: 'invalid_code'}
+    assert_return REST::CODE_INVALID_RESPONSE
 
-    # Test no phone
-    post '/sessions', {code: '1234'}
-    assert_return [400, '{"message":"Phone must be 10 digits."}']
+    # Test incorrect email & code
+    post '/sessions', {email: 'incorrect@example.com', code: code}
+    assert_return REST::CODE_INCORRECT_RESPONSE
+    post '/sessions', {email: @email, code: (code == '1234' ? '1235' : '1234')}
+    assert_return REST::CODE_INCORRECT_RESPONSE
 
-    # Test empty phone
-    post '/sessions', {phone: '', code: '1234'}
-    assert_return [400, '{"message":"Phone must be 10 digits."}']
+    # Test correct email & code
+    post '/sessions', {email: @email, code: code}
+    assert_return /\A\{"access_token":"1\.[0-9a-f]{32}"\}\z/
 
-    # Test invalid phone
-    post '/sessions', {phone: '1234567890', code: '1234'}
-    assert_return [400, '{"message":"Phone must be 10 digits."}']
-
-    # Test incorrect code
-    incorrect_code = (code == '1234' ? '1235' : '1234')
-    post '/sessions', {phone: @phone, code: incorrect_code}
-    assert_return [403, '{"message":"Code is incorrect or expired."}']
-
-    # Test incorrect phone
-    post '/sessions', {phone: '2102390603', code: code}
-    assert_return [403, '{"message":"Code is incorrect or expired."}']
-
-    # Test correct phone & code
-    post '/sessions', {phone: @phone, code: code}
-    assert_return [201, /\A\{"access_token":"1\.[0-9a-f]{32}"\}\z/]
+    # Confirm user was logged in
+    authorize_user(JSON.parse(last_response.body)['access_token']) do
+      delete '/sessions'
+      assert_return 200
+    end
 
     # Test that code only works once
-    post '/sessions', {phone: @phone, code: code}
-    assert_return [403, '{"message":"Code is incorrect or expired."}']
+    post '/sessions', {email: @email, code: code}
+    assert_return REST::CODE_INCORRECT_RESPONSE
   end
 
   def test_sessions_delete
     # Test invalid access_token
     authorize_user('invalid-access_token') do
       delete '/sessions'
-      assert_return [401, {'WWW-Authenticate' => 'Basic realm="Chats"'}, '']
+      assert_return REST::WWW_AUTHENTICATE_RESPONSE
     end
 
     # Test incorrect access_token
-    authorize_user('9.0123456789abcdef0123456789abcdef') do
+    authorize_user('2.0123456789abcdef0123456789abcdef') do
       delete '/sessions'
-      assert_return [401, {'WWW-Authenticate' => 'Basic realm="Chats"'}, '']
+      assert_return REST::WWW_AUTHENTICATE_RESPONSE
     end
 
     # Test correct access_token
@@ -68,7 +63,7 @@ class SessionsTest < ChatsTest
       delete '/sessions'
       assert_return 200
       get '/me'
-      assert_return [401, {'WWW-Authenticate' => 'Basic realm="Chats"'}, '']
+      assert_return REST::WWW_AUTHENTICATE_RESPONSE
     end
   end
 end

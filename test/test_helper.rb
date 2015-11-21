@@ -2,27 +2,26 @@
 # RUBYLIB=test ruby test/users_test.rb --name test_post_users
 
 ENV['RACK_ENV'] = 'test'
-ENV['DATABASE_URL'] = 'postgres://localhost/chats'
-ENV['AWS_REGION'] = 'region'
-ENV['AWS_ACCESS_KEY_ID'] = 'AWS_ACCESS_KEY_ID'
-ENV['AWS_SECRET_ACCESS_KEY'] = 'AWS_SECRET_ACCESS_KEY'
+ENV['DATABASE_URL'] = 'postgres://localhost/acanichats'
 
 require 'minitest/autorun'
 require 'rack/test'
+require 'securerandom'
 require './config/application'
 
-class ChatsTest < MiniTest::Test
+class RESTTest < MiniTest::Test
   include Rack::Test::Methods
 
-  APP = Rack::Builder.parse_file('config.ru')[0]
+  TOO_LONG_NAME = '123456789.123456789.123456789.123456789.123456789.1'
+
   def app
-    APP
+    REST.new
   end
 
   def setup
     # Create a user
-    @phone = '2102390602'
-    @access_token = create_user(@phone, SecureRandom.hex, 'Matt', 'Di Pasquale', 'matt@gmail.com')
+    @email = 'test@example.com'
+    @access_token = create_user('Sally', 'Davis', @email)
   end
 
   def teardown
@@ -44,77 +43,47 @@ class ChatsTest < MiniTest::Test
   end
 
   def assert_return(return_value)
-    status, headers, body = parse_return(return_value)
+    status, headers, body = app.formulate_response(return_value)
+
     assert_equal status, last_response.status
+
+    last_response.headers.delete('Content-Length')
     assert_equal headers, last_response.headers
-    if String === body
-      assert_equal body, last_response.body
+
+    bodyString = body[0] || ''
+    if String === bodyString
+      assert_equal bodyString, last_response.body
     else # Regexp
-      assert_match body, last_response.body
+      assert_match bodyString, last_response.body
     end
   end
 
   private
 
-  def parse_return(return_value)
-    status, headers, body = 200, {}, ''
-    case return_value
-    when Fixnum
-      status = return_value
-    when String, Regexp
-      body = return_value
-    else # Array
-      if return_value.count == 2
-        status, body = return_value
-      else
-        status, headers, body = return_value
-      end
-    end
-    [status, headers_base.merge(headers), body]
-  end
-
-  def headers_base
-    headers_base = {}
-    content_length = last_response.headers['Content-Length']
-    headers_base['Content-Length'] = content_length if content_length
-    unless last_response.body.empty?
-      headers_base['Content-Type'] = 'application/json'
-    end
-    headers_base
-  end
-
-  def create_user(phone, picture_id, first_name, last_name, email)
+  def create_user(first_name, last_name, email)
     $pg.with do |pg|
-      pg.exec('INSERT INTO users (phone, picture_id, first_name, last_name, email) VALUES ($1, $2, $3, $4, $5) RETURNING id', [phone, picture_id, first_name, last_name, email]) do |r|
+      pg.exec_params('INSERT INTO users (first_name, last_name, email) VALUES ($1, $2, $3) RETURNING id', [first_name, last_name, email]) do |r|
         user_id = r.getvalue(0, 0)
-        pg.exec('INSERT INTO sessions VALUES ($1) RETURNING strip_hyphens(id)', [user_id]) do |r|
-          user_id+'|'+r.getvalue(0, 0)
+        pg.exec_params('INSERT INTO sessions VALUES ($1) RETURNING strip_hyphens(id)', [user_id]) do |r|
+          user_id+'.'+r.getvalue(0, 0)
         end
       end
     end
   end
 
-  def get_code(phone)
+  def get_code(type, email)
     $pg.with do |pg|
-      pg.exec_params('SELECT code FROM codes WHERE phone = $1', [phone]) do |r|
+      pg.exec_params("SELECT code FROM #{type} WHERE email = $1", [email]) do |r|
         r.getvalue(0, 0).rjust(4, '0')
       end
     end
   end
 
-  def get_and_assert_code(phone)
-    code = get_code(phone)
+  def get_and_assert_code(type, email)
+    code = get_code(type, email)
     assert_match /\A\d{4}\z/, code
     code
   end
-
-  def get_key(phone)
-    $pg.with do |pg|
-      pg.exec_params('SELECT strip_hyphens(key) FROM keys WHERE phone = $1', [phone]) do |r|
-        r.getvalue(0, 0)
-      end
-    end
-  end
 end
 
-require './test/helpers/text_belt_mock'
+require './test/helpers/mailgun_mock'

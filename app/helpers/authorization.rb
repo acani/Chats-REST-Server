@@ -1,4 +1,4 @@
-class Chats
+class REST
   def build_access_token(user_id, session_id)
     user_id + '.' + session_id
   end
@@ -9,10 +9,6 @@ class Chats
       result = access_token.split('.')
       result if result.size == 2
     end
-  end
-
-  def set_www_authenticate_header
-    @response_headers['WWW-Authenticate'] = 'Basic realm="Chats"'
   end
 
   private

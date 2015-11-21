@@ -1,7 +1,6 @@
 source 'https://rubygems.org'
-ruby '2.2.2'
+ruby '2.2.3'
 
-gem 'aws-sdk'
 gem 'connection_pool'
 gem 'json'
 gem 'pg'

@@ -1,45 +1,42 @@
-class Chats
-  def call(env)
-    @env = env
-    @response_headers = {}
-    method = env['REQUEST_METHOD']
+class REST
+  def routes
+    request_method = @env['REQUEST_METHOD']
 
-    return_value = case env['PATH_INFO']
-    when '/codes'
-      case method
-      when 'POST' then codes_post
-      end
-    when '/keys'
-      case method
-      when 'POST' then keys_post
+    # if @env['HTTP_ORIGIN']
+    #   @response_headers['Access-Control-Allow-Origin'] = '*'
+    # end
+    #
+    # if request_method == 'OPTIONS'
+    #   return cors_options
+    # end
+
+    case @env['PATH_INFO']
+    when '/login'
+      case request_method
+      when 'POST' then login_post
       end
     when '/me'
-      case method
+      case request_method
       when 'GET' then me_get
       when 'PATCH' then me_patch
       when 'DELETE' then me_delete
       end
     when '/sessions'
-      case method
+      case request_method
       when 'POST' then sessions_post
       when 'DELETE' then sessions_delete
       end
+    when '/signup'
+      case request_method
+      when 'POST' then signup_post
+      end
     when '/users'
-      case method
+      case request_method
       when 'GET' then users_get
       when 'POST' then users_post
       end
-    end
-
-    if return_value
-      body = return_value[1]
-      return_value[1] = [body]
-      unless body.empty?
-        @response_headers['Content-Type'] = 'application/json'
-      end
-      return_value.insert(1, @response_headers)
     else
-      [404, {}, []]
+      404
     end
   end
 end
