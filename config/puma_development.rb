@@ -4,5 +4,9 @@ threads threads_count, threads_count
 
 preload_app!
 
-port        ENV['PORT']     || 3000
 environment ENV['RACK_ENV'] || 'development'
+
+port = ENV['PORT'] || 3000
+key  = File.join('config', 'ssl', 'server.key')
+cert = File.join('config', 'ssl', 'server.crt')
+ssl_bind '0.0.0.0', port, {key: key, cert: cert}
