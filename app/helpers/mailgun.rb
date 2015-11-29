@@ -16,11 +16,15 @@ class REST
       http = Net::HTTP.new('api.mailgun.net', 443)
       http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-      http.start do |http|
-        request = Net::HTTP::Post.new("/v3/#{ENV['MAILGUN_DOMAIN_NAME']}/messages")
-        request.basic_auth('api', ENV['MAILGUN_API_KEY'])
-        request.form_data = params
-        http.request(request)
+      begin
+        http.start do |http|
+          request = Net::HTTP::Post.new("/v3/#{ENV['MAILGUN_DOMAIN_NAME']}/messages")
+          request.basic_auth('api', ENV['MAILGUN_API_KEY'])
+          request.form_data = params
+          http.request(request).code.to_i
+        end
+      rescue SocketError
+        502 # Bad Gateway
       end
     end
   end
