@@ -11,6 +11,7 @@ require './config/handler'
 require './config/routes'
 
 # require './app/controllers/cors_controller'
+require './app/controllers/email_controller'
 require './app/controllers/login_controller'
 require './app/controllers/me_controller'
 require './app/controllers/sessions_controller'

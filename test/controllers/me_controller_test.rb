@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class MeTest < RESTTest
+class MeControllerTest < RESTTest
   def test_me_get
     # Test invalid access_token
     authorize_user('invalid-access_token') do

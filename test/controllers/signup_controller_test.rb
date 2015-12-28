@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class SignupCodesTest < RESTTest
+class SignupControllerTest < RESTTest
   def test_signup_post
     # Test invalid first_name
     post '/signup'
@@ -35,14 +35,14 @@ class SignupCodesTest < RESTTest
     # Test unregistered email, success sending email
     unregistered_email = 'unregistered@example.com'
     valid_fields[:email] = unregistered_email
-    REST::Mailgun.mock('200') do
+    REST::Mailgun.mock(200) do
       post '/signup', valid_fields
     end
     assert_return 200
     code = get_and_assert_code('signup', unregistered_email)
 
     # Test unregistered email update, error sending email
-    REST::Mailgun.mock('500') do
+    REST::Mailgun.mock(500) do
       post '/signup', valid_fields
     end
     assert_return REST::SEND_EMAIL_ERROR_RESPONSE

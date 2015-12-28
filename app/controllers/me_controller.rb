@@ -17,7 +17,7 @@ class REST
   end
 
   # Update me: first_name, last_name
-  # curl -ik -X PATCH -H 'Authorization: Bearer 1.0123456789abcdef0123456789abcdef' -d phone='2102390603' -d first_name=John -d last_name='Appleseed' https://localhost:5100/me
+  # curl -ik -X PATCH -H 'Authorization: Bearer 1.0123456789abcdef0123456789abcdef' -d first_name=John -d last_name='Appleseed' https://localhost:5100/me
   def me_patch
     user_id, session_id = parse_authorization_header
     if user_id && session_id

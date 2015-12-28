@@ -18,7 +18,7 @@ class REST
             to: email,
             subject: 'Login Code',
             text: r.getvalue(0, 0).rjust(4, '0')
-          }).code.to_i
+          })
           unless code == 200
             SEND_EMAIL_ERROR_RESPONSE
           end

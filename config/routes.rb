@@ -11,6 +11,11 @@ class REST
     # end
 
     case @env['PATH_INFO']
+    when '/email'
+      case request_method
+      when 'POST' then email_post
+      when 'PUT' then email_put
+      end
     when '/login'
       case request_method
       when 'POST' then login_post

@@ -1,9 +1,9 @@
 require 'test_helper'
 
-class SessionsTest < RESTTest
+class SessionsControllerTest < RESTTest
   def test_sessions_post
     # Create code
-    REST::Mailgun.mock('200') do
+    REST::Mailgun.mock(200) do
       post '/login', {email: @email}
     end
     code = get_code('login', @email)
