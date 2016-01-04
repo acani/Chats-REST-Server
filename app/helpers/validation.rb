@@ -1,17 +1,19 @@
 class REST
-  # PICTURE_ID_INVALID_RESPONSE = [400, ['{"message":"Picture ID must be 32 lowercase hexidecimal digits."}']]
-  FIRST_NAME_INVALID_RESPONSE = [400, ['{"message":"First name must be between 1 & 50 characters."}']]
-  LAST_NAME_INVALID_RESPONSE  = [400, ['{"message":"Last name must be between 1 & 50 characters."}']]
-  EMAIL_INVALID_RESPONSE      = [400, ['{"message":"Email must be between 3 & 254 characters and have an at sign."}']]
-  # PHONE_INVALID_RESPONSE      = [400, ['{"message":"Phone must be 10 digits."}']]
-  CODE_INVALID_RESPONSE       = [400, ['{"message":"Code must be between 1 & 4 digits."}']]
+  # PICTURE_ID_INVALID_RESPONSE = [403, ['{"message":"Picture ID must be 32 lowercase hexidecimal digits."}']]
+  FIRST_NAME_INVALID_RESPONSE = [403, ['{"message":"First name must be between 1 & 50 characters."}']]
+  LAST_NAME_INVALID_RESPONSE  = [403, ['{"message":"Last name must be between 1 & 50 characters."}']]
+  EMAIL_INVALID_RESPONSE      = [403, ['{"message":"Email must be between 3 & 254 characters and have an at sign."}']]
+  # PHONE_INVALID_RESPONSE      = [403, ['{"message":"Phone must be 10 digits."}']]
+  CODE_INVALID_RESPONSE       = [403, ['{"message":"Code must be between 1 & 4 digits."}']]
   CODE_INCORRECT_RESPONSE     = [403, ['{"message":"Code is incorrect or expired."}']]
   ALREADY_SIGNED_UP_RESPONSE  = [403, ['{"message":"An Acani Chats account already exists with that email address."}']]
   NOT_YET_SIGNED_UP_RESPONSE  = [403, ['{"message":"No Acani Chats account exists with that email address."}']]
   SEND_EMAIL_ERROR_RESPONSE   = [500, ['{"message":"Could not send email."}']]
-  ME_NO_CHANGES_RESPONSE      = [400, ['{"message":"No changes requested."}']]
+  ME_NO_CHANGES_RESPONSE      = [403, ['{"message":"No changes requested."}']]
+  EMAIL_NO_CHANGES_RESPONSE   = [403, ['{"message":"That\'s your email already. No changes made."}']]
   WWW_AUTHENTICATE_RESPONSE   = [401, {'WWW-Authenticate' => 'Bearer realm="Acani Chats"'}, []]
   EMAIL_FROM_ADDRESS = 'Acani Chats <support@chats.acani.com>'
+  EMAIL_CHANGED_TEXT = 'Your email has been changed to %s. If you didn\'t make this change, please contact support@chats.acani.com immediately. Thank you.'
 
   # def picture_id_invalid_response(picture_id)
   #   if picture_id && !uuid_valid?(picture_id)

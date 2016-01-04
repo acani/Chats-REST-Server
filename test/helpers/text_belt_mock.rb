@@ -2,9 +2,9 @@
 #
 # class REST
 #   module TextBelt
-#     def self.mock(result)
+#     def self.mock(retval, args=[Hash])
 #       mock = MiniTest::Mock.new
-#       mock.expect(:send, result, [Hash])
+#       mock.expect(:send, retval, args)
 #
 #       REST.const_mock(:TextBelt, mock) do
 #         yield

@@ -1,6 +1,6 @@
 class REST
   # Create or update signup code with first_name, last_name, and email
-  # curl -ik -d first_name=Sally -d last_name=Davis -d email=test@example.com https://localhost:5100/signup
+  # curl -ik -d first_name=Sally -d last_name=Davis -d email=sally.davis@example.com https://localhost:5100/signup
   def signup_post
     params = Rack::Request.new(@env).POST
 
@@ -33,9 +33,7 @@ class REST
             subject: 'Signup Code',
             text: r.getvalue(0, 0).rjust(4, '0')
           })
-          unless code == 200
-            SEND_EMAIL_ERROR_RESPONSE
-          end
+          SEND_EMAIL_ERROR_RESPONSE unless code == 200
         end
       end
     end

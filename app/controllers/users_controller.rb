@@ -15,7 +15,7 @@ class REST
   end
 
   # Sign up: Create user with email & code
-  # curl -ik -d email=test@example.com -d code=1234 https://localhost:5100/users
+  # curl -ik -d email=sally.davis@example.com -d code=1234 https://localhost:5100/users
   def users_post
     params = Rack::Request.new(@env).POST
 

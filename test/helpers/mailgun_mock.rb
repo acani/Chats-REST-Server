@@ -2,9 +2,9 @@ require_relative 'const_mock'
 
 class REST
   module Mailgun
-    def self.mock(code)
+    def self.mock(retval, args=[Hash])
       mock = MiniTest::Mock.new
-      mock.expect(:send, code, [Hash])
+      mock.expect(:send, retval, args)
 
       REST.const_mock(:Mailgun, mock) do
         yield

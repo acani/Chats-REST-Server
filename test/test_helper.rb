@@ -20,7 +20,7 @@ class RESTTest < MiniTest::Test
 
   def setup
     # Create a user
-    @email = 'test@example.com'
+    @email = 'sally.davis@example.com'
     @access_token = create_user('Sally', 'Davis', @email)
   end
 
@@ -57,8 +57,6 @@ class RESTTest < MiniTest::Test
       assert_match bodyString, last_response.body
     end
   end
-
-  private
 
   def create_user(first_name, last_name, email)
     $pg.with do |pg|

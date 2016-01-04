@@ -17,7 +17,7 @@ class MeControllerTest < RESTTest
     # Test correct access_token
     authorize_user(@access_token) do
        get '/me'
-       assert_return /\A\{"id":"1","name":\{"first":"Sally","last":"Davis"\},"email":"test@example.com"\}\z/
+       assert_return /\A\{"id":"1","name":\{"first":"Sally","last":"Davis"\},"email":"sally.davis@example.com"\}\z/
     end
   end
 

@@ -1,6 +1,6 @@
 class REST
   # Log in: Verify email & code and get/create session
-  # curl -ik -d email=test@example.com -d code=1234 https://localhost:5100/sessions
+  # curl -ik -d email=sally.davis@example.com -d code=1234 https://localhost:5100/sessions
   def sessions_post
     params = Rack::Request.new(@env).POST
 

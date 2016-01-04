@@ -1,6 +1,6 @@
 class REST
   # Create or update login code with email
-  # curl -ik -d email=test@example.com https://localhost:5100/login
+  # curl -ik -d email=sally.davis@example.com https://localhost:5100/login
   def login_post
     # Validate email
     email = Rack::Request.new(@env).POST['email'].to_s
@@ -19,9 +19,7 @@ class REST
             subject: 'Login Code',
             text: r.getvalue(0, 0).rjust(4, '0')
           })
-          unless code == 200
-            SEND_EMAIL_ERROR_RESPONSE
-          end
+          SEND_EMAIL_ERROR_RESPONSE unless code == 200
         end
       end
     end

@@ -1,6 +1,6 @@
 class REST
   # Create or update email code
-  # curl -ik -d email=test@example.com https://localhost:5100/email
+  # curl -ik -d email=sally.davis@example.com https://localhost:5100/email
   def email_post
     user_id, session_id = parse_authorization_header
     if user_id && session_id
@@ -14,7 +14,8 @@ class REST
         pg.exec_params('SELECT * FROM email_post($1,$2,$3)', [user_id, session_id, email]) do |r|
           if r.num_tuples == 1
             value = r.getvalue(0, 0)
-            return ALREADY_SIGNED_UP_RESPONSE if value == '-1'
+            return EMAIL_NO_CHANGES_RESPONSE  if value == '-1'
+            return ALREADY_SIGNED_UP_RESPONSE if value == '-2'
 
             code = Mailgun.send({
               from: EMAIL_FROM_ADDRESS,
@@ -31,7 +32,7 @@ class REST
   end
 
   # Update email with email & code
-  # curl -ik -X PUT -d email=test@example.com -d code=1234 https://localhost:5100/email
+  # curl -ik -X PUT -d email=sally.davis@example.com -d code=1234 https://localhost:5100/email
   def email_put
     params = Rack::Request.new(@env).POST
 
@@ -50,6 +51,13 @@ class REST
       pg.exec_params('SELECT * FROM email_put($1,$2)', [email, code]) do |r|
         if r.num_tuples == 0
           CODE_INCORRECT_RESPONSE
+        else
+          Mailgun.send({
+            from: EMAIL_FROM_ADDRESS,
+            to: r.getvalue(0, 0),
+            subject: 'Email Changed',
+            text: EMAIL_CHANGED_TEXT % email
+          })
         end
       end
     end

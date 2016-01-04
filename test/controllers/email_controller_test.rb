@@ -2,6 +2,9 @@ require 'test_helper'
 
 class EmailControllerTest < RESTTest
   def test_email_post
+    registered_email = 'john.appleseed@example.com'
+    create_user('John', 'Appleseed', 'john.appleseed@example.com')
+
     # Test invalid access_token
     authorize_user('invalid-access_token') do
       post '/email'
@@ -31,8 +34,12 @@ class EmailControllerTest < RESTTest
 
     # Test correct access_token
     authorize_user(@access_token) do
-      # Test registered email
+      # Test same email
       post '/email', {email: @email}
+      assert_return REST::EMAIL_NO_CHANGES_RESPONSE
+
+      # Test registered email
+      post '/email', {email: registered_email}
       assert_return REST::ALREADY_SIGNED_UP_RESPONSE
 
       # Test unregistered email, success sending email
@@ -85,8 +92,15 @@ class EmailControllerTest < RESTTest
     assert_return REST::CODE_INCORRECT_RESPONSE
 
     # Test correct email & code
-    put '/email', {email: email, code: code}
-    assert_return 200
+    REST::Mailgun.mock(200, [{
+      from: REST::EMAIL_FROM_ADDRESS,
+      to: @email,
+      subject: 'Email Changed',
+      text: REST::EMAIL_CHANGED_TEXT % email
+    }]) do
+      put '/email', {email: email, code: code}
+      assert_return 200
+    end
 
     # Confirm email was updated
     authorize_user(@access_token) do
