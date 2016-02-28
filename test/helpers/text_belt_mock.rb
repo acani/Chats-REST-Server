@@ -1,6 +1,6 @@
 # require_relative 'const_mock'
 #
-# class REST
+# class RESTTest
 #   module TextBelt
 #     def self.mock(retval, args=[Hash])
 #       mock = MiniTest::Mock.new

@@ -15,14 +15,14 @@ class LoginControllerTest < RESTTest
     assert_return REST::NOT_YET_SIGNED_UP_RESPONSE
 
     # Test registered email, success sending email
-    REST::Mailgun.mock(200) do
+    Mailgun.mock(200) do
       post '/login', {email: @email}
     end
     assert_return 200
     code = get_and_assert_code('login', @email)
 
     # Test registered email update, error sending email
-    REST::Mailgun.mock(500) do
+    Mailgun.mock(500) do
       post '/login', {email: @email}
     end
     assert_return REST::SEND_EMAIL_ERROR_RESPONSE

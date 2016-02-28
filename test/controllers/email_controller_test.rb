@@ -43,14 +43,14 @@ class EmailControllerTest < RESTTest
       assert_return REST::ALREADY_SIGNED_UP_RESPONSE
 
       # Test unregistered email, success sending email
-      REST::Mailgun.mock(200) do
+      Mailgun.mock(200) do
         post '/email', {email: unregistered_email}
       end
       assert_return 200
       code = get_and_assert_code('email', unregistered_email)
 
       # Test unregistered email update, error sending email
-      REST::Mailgun.mock(500) do
+      Mailgun.mock(500) do
         post '/email', {email: unregistered_email}
       end
       assert_return REST::SEND_EMAIL_ERROR_RESPONSE
@@ -63,7 +63,7 @@ class EmailControllerTest < RESTTest
     # Create code
     email = 'unregistered@example.com'
     authorize_user(@access_token) do
-      REST::Mailgun.mock(200) do
+      Mailgun.mock(200) do
         post '/email', {email: email}
       end
     end
@@ -92,7 +92,7 @@ class EmailControllerTest < RESTTest
     assert_return REST::CODE_INCORRECT_RESPONSE
 
     # Test correct email & code
-    REST::Mailgun.mock(200, [{
+    Mailgun.mock(200, [{
       from: REST::EMAIL_FROM_ADDRESS,
       to: @email,
       subject: 'Email Changed',

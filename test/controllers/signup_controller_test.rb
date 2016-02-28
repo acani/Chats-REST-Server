@@ -35,14 +35,14 @@ class SignupControllerTest < RESTTest
     # Test unregistered email, success sending email
     unregistered_email = 'unregistered@example.com'
     valid_fields[:email] = unregistered_email
-    REST::Mailgun.mock(200) do
+    Mailgun.mock(200) do
       post '/signup', valid_fields
     end
     assert_return 200
     code = get_and_assert_code('signup', unregistered_email)
 
     # Test unregistered email update, error sending email
-    REST::Mailgun.mock(500) do
+    Mailgun.mock(500) do
       post '/signup', valid_fields
     end
     assert_return REST::SEND_EMAIL_ERROR_RESPONSE

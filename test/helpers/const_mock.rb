@@ -1,5 +1,5 @@
-class REST
-  def self.const_mock(const, mock)
+class Module
+  def const_mock(const, mock)
     temp = const_get(const)
     const_set_silent(const, mock)
     yield
@@ -9,7 +9,7 @@ class REST
 
   # helper
 
-  def self.const_set_silent(const, value)
+  def const_set_silent(const, value)
     temp = $VERBOSE
     $VERBOSE = nil
     const_set(const, value)

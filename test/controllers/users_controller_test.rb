@@ -9,7 +9,7 @@ class UsersControllerTest < RESTTest
   def test_users_post
     # Create code
     email = 'unregistered@example.com'
-    REST::Mailgun.mock(200) do
+    Mailgun.mock(200) do
       post '/signup', {first_name: 'John', last_name: 'Appleseed', email: email}
     end
     code = get_code('signup', email)
