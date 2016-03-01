@@ -2,7 +2,7 @@
 # RUBYLIB=test ruby test/users_test.rb --name test_post_users
 
 ENV['RACK_ENV'] = 'test'
-ENV['DATABASE_URL'] = 'postgres://localhost/acanichats'
+ENV['DATABASE_URL'] = 'postgres://localhost/acani_chats_test'
 
 require 'minitest/autorun'
 require 'rack/test'
@@ -84,4 +84,5 @@ class RESTTest < MiniTest::Test
   end
 end
 
-require './test/helpers/mailgun_mock'
+require './test/helpers/mailgun'
+# require './test/helpers/text_belt'
